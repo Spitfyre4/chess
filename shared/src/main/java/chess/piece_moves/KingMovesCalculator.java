@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class KingMovesCalculator extends PieceMovesCalculator{
@@ -13,6 +14,11 @@ public class KingMovesCalculator extends PieceMovesCalculator{
     }
 
     public Collection<ChessMove> Legal_Moves_Calc() {
-        throw new RuntimeException("Not implemented");
+        int start_row = position.getRow();
+        int start_col = position.getColumn();
+        ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
+        ChessPosition end_pos = new ChessPosition(start_row, start_col);
+
+        end_pos = new ChessPosition(start_row+1, start_col);
     }
 }
