@@ -79,8 +79,7 @@ public class ChessPiece {
         if(this.type == PieceType.PAWN){
             piece_calc = new PawnMovesCalculator(board, myPosition);
         }
-        if (piece_calc != NULL) {
-            assert piece_calc != null;
+        if (piece_calc != null) {
             return piece_calc.Legal_Moves_Calc();
         }
         else{
