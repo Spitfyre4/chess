@@ -80,6 +80,7 @@ public class ChessPiece {
             piece_calc = new PawnMovesCalculator(board, myPosition);
         }
         if (piece_calc != null) {
+            System.out.println(piece_calc.Legal_Moves_Calc());
             return piece_calc.Legal_Moves_Calc();
         }
         else{
