@@ -2,6 +2,7 @@ package chess;
 
 import chess.piece_moves.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -54,30 +55,36 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        PieceMovesCalculator piece_calc = null;
         if(this.type == PieceType.KING){
-            KingMovesCalculator piece_calc = new KingMovesCalculator(board, myPosition);
+            piece_calc = new KingMovesCalculator(board, myPosition);
         }
 
         if(this.type == PieceType.QUEEN){
-            QueenMovesCalculator piece_calc = new QueenMovesCalculator(board, myPosition);
+            piece_calc = new QueenMovesCalculator(board, myPosition);
         }
 
         if(this.type == PieceType.BISHOP){
-            BishopMovesCalculator piece_calc = new BishopMovesCalculator(board, myPosition);
+            piece_calc = new BishopMovesCalculator(board, myPosition);
         }
 
         if(this.type == PieceType.KNIGHT){
-            KnightMovesCalculator piece_calc = new KnightMovesCalculator(board, myPosition);
+            piece_calc = new KnightMovesCalculator(board, myPosition);
         }
 
         if(this.type == PieceType.ROOK){
-            RookMovesCalculator piece_calc = new RookMovesCalculator(board, myPosition);
+            piece_calc = new RookMovesCalculator(board, myPosition);
         }
 
         if(this.type == PieceType.PAWN){
-            PawnMovesCalculator piece_calc = new PawnMovesCalculator(board, myPosition);
+            piece_calc = new PawnMovesCalculator(board, myPosition);
         }
-
-
+        if (piece_calc != NULL) {
+            assert piece_calc != null;
+            return piece_calc.Legal_Moves_Calc();
+        }
+        else{
+            throw new RuntimeException("Piece_calc never initialized");
+        }
     }
 }
