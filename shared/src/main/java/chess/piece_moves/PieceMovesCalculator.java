@@ -3,7 +3,7 @@ package chess.piece_moves;
 import chess.ChessBoard;
 import chess.ChessPosition;
 
-public class PieceMovesCalculator {
+public class PieceMovesCalculator{
 
     protected final ChessBoard board;
     protected final ChessPosition position;
