@@ -30,6 +30,12 @@ public abstract class PieceMovesCalculator{
         }
     }
 
+    public boolean off_board(ChessPosition pos){
+        int i = pos.getRow();
+        int j = pos.getColumn();
+        return this.off_board(i, j);
+    }
+
 //    public PieceMovesCalculator() {
 //        this.board = new ChessBoard();
 //        this.position = new ChessPosition(0, 0);
