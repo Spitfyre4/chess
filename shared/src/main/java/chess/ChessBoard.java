@@ -38,6 +38,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        squares = new ChessPiece[8][8];
+
+        for (int j = 1; j <= 8; j++){ //White pawns
+            ChessPiece pawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            ChessPosition pos = new ChessPosition(2, j);
+            this.addPiece(pos, pawn);
+        }
     }
 }
