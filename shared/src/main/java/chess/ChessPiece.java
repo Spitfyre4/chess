@@ -32,6 +32,8 @@ public class ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
+
+
     }
 
     /**
@@ -59,6 +61,16 @@ public class ChessPiece {
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public String toString() {
+        if (getTeamColor() == ChessGame.TeamColor.BLACK) {
+            return (type.name()).substring(0, 1).toLowerCase();
+        }
+        else{
+            return (type.name()).substring(0, 1);
+        }
     }
 
     /**
