@@ -64,6 +64,7 @@ public class ChessGame {
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
             if(isInCheck(og_board.getPiece(startPosition).getTeamColor())){
+                this.board = new ChessBoard(og_board);
                 continue;
             }
             else{
