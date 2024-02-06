@@ -1,6 +1,5 @@
 package chess;
 
-import chess.piece_moves.PieceMovesCalculator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +16,7 @@ public class ChessGame {
     private ChessBoard board;
 
     public ChessGame() {
-    this.turn = TeamColor.WHITE;
+        this.turn = TeamColor.WHITE;
     }
 
     /**
@@ -190,7 +189,7 @@ public class ChessGame {
                     continue;
                 }
                 if(!validMoves(pos).isEmpty()){
-                   return true;
+                    return true;
                 }
             }
         }
@@ -203,7 +202,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-       this.board = board;
+        this.board = board;
     }
 
     /**
