@@ -54,14 +54,23 @@ public class ChessGame {
         if(piece == null){
             return null;
         }
-        ChessBoard sim_board = new ChessBoard(board);
+
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        ChessBoard og_board = new ChessBoard(board);
+
         for(ChessMove move: piece.pieceMoves(board, startPosition)){
-            sim_board.addPiece(move.getEndPosition(), piece);
-            sim_board.removePiece(move.getStartPosition());
+            board.addPiece(move.getEndPosition(), piece);
+            board.removePiece(move.getStartPosition());
+            if(isInCheck(og_board.getPiece(startPosition).getTeamColor())){
+                continue;
+            }
+            else{
+                moves.add(move);
+            }
+            this.board = new ChessBoard(og_board);
         }
 
-
-
+        return moves;
     }
 
     /**
