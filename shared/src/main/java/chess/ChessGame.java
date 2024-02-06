@@ -56,6 +56,7 @@ public class ChessGame {
         }
         ChessBoard sim_board = new ChessBoard(board);
         for(ChessMove move: piece.pieceMoves(board, startPosition)){
+            sim_board.addPiece(move.getEndPosition(), piece);
 
         }
 
