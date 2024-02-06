@@ -1,5 +1,7 @@
 package chess;
 
+import chess.piece_moves.PieceMovesCalculator;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -80,6 +82,11 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+
+        if (off_board(move.getEndPosition()) || off_board(move.getStartPosition())){
+            throw new InvalidMoveException();
+        }
+
         ChessPosition startPosition = move.getStartPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
@@ -91,6 +98,24 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
 
+    }
+
+    public boolean off_board(int i, int j){
+        if(i<1 || i>8){
+            return true;
+        }
+        else if(j<1 || j>8){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean off_board(ChessPosition pos){
+        int i = pos.getRow();
+        int j = pos.getColumn();
+        return this.off_board(i, j);
     }
 
     /**
@@ -131,7 +156,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor) && isInStalemate(teamColor)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -142,7 +172,20 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        for(int i = 1; i <=8; i++){
+            for(int j = 1; j <=8; j++){
+                ChessPosition pos = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(pos);
+                if(piece == null || piece.getTeamColor().equals(teamColor)){
+                    continue;
+                }
+                if(!validMoves(pos).isEmpty()){
+                   return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
