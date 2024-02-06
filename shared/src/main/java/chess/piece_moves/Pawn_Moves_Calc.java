@@ -58,6 +58,7 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
 
 
             end_pos = new ChessPosition(start_row + 1, start_col + 1); //capture up right
+            if(!off_board(end_pos)){
             if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.WHITE) {
                 if (end_pos.getRow() == 8) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
@@ -77,8 +78,10 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
                     legal_moves.add(possible_move);
                 }
             }
+            }
 
             end_pos = new ChessPosition(start_row + 1, start_col - 1); //capture up left
+            if(!off_board(end_pos)) {
             if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.WHITE) {
                 if (end_pos.getRow() == 8) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
@@ -99,6 +102,7 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
                 }
             }
         }
+            }
 
         if (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.BLACK) { //BLACK Moves
             if (start_row == 7) { //double move
@@ -140,8 +144,9 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
 
 
             end_pos = new ChessPosition(start_row - 1, start_col - 1); //capture down left
-            if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
-                if (end_pos.getRow() == 1) {
+            if(!off_board(end_pos)) {
+                if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
+                    if (end_pos.getRow() == 1) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
                         legal_moves.add(possible_move);
 
@@ -153,15 +158,17 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
 
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.ROOK);
                         legal_moves.add(possible_move);
-                } else {
-                    possible_move = new ChessMove(position, end_pos, null);
-                    legal_moves.add(possible_move);
+                    } else {
+                        possible_move = new ChessMove(position, end_pos, null);
+                        legal_moves.add(possible_move);
+                    }
                 }
             }
 
             end_pos = new ChessPosition(start_row - 1, start_col + 1); //capture down right
-            if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
-                if (end_pos.getRow() == 1) {
+            if(!off_board(end_pos)) {
+                if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
+                    if (end_pos.getRow() == 1) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
                         legal_moves.add(possible_move);
 
@@ -173,9 +180,10 @@ public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
 
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.ROOK);
                         legal_moves.add(possible_move);
-                } else {
-                    possible_move = new ChessMove(position, end_pos, null);
-                    legal_moves.add(possible_move);
+                    } else {
+                        possible_move = new ChessMove(position, end_pos, null);
+                        legal_moves.add(possible_move);
+                    }
                 }
             }
         }

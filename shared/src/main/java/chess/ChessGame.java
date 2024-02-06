@@ -92,6 +92,9 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
 
         if(validMoves(startPosition).contains(move)){
+            if (piece.getPieceType().equals(ChessPiece.PieceType.PAWN) && move.getPromotionPiece()!= null){
+                piece = new ChessPiece(piece.piececolor, move.getPromotionPiece());
+            }
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(startPosition);
             if(piece.getTeamColor().equals(TeamColor.WHITE)){
