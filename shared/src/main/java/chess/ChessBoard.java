@@ -14,6 +14,19 @@ public class ChessBoard {
         
     }
 
+    public ChessBoard(ChessBoard og_board){
+        for(int i = 1; i <=8; i++){
+            for(int j = 1; j <=8; j++){
+                ChessPosition pos = new ChessPosition(i, j);
+                ChessPiece piece = og_board.getPiece(pos);
+                if(piece != null) {
+                    this.addPiece(pos, piece);
+                }
+
+            }
+        }
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -76,7 +89,7 @@ public class ChessBoard {
      */
     public void resetBoard() {
         squares = new ChessPiece[8][8];
-        ChessPiece pawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        ChessPiece pawn;
         ChessPosition pos = new ChessPosition(1,1);
 
         //White pawns

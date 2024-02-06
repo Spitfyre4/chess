@@ -36,8 +36,4 @@ public abstract class PieceMovesCalculator{
         return this.off_board(i, j);
     }
 
-//    public PieceMovesCalculator() {
-//        this.board = new ChessBoard();
-//        this.position = new ChessPosition(0, 0);
-//    }
 }
