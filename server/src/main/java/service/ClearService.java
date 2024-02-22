@@ -3,9 +3,9 @@ package service;
 import dataAccess.*;
 
 public class ClearService {
-    private final AuthDAO AuthDatabase;
-    private final GameDAO GameDatabase;
-    private final UserDAO UserDatabase;
+    public final AuthDAO AuthDatabase;
+    public final GameDAO GameDatabase;
+    public final UserDAO UserDatabase;
 
     public ClearService(){
         this.AuthDatabase = new MemoryAuthDAO();
@@ -18,4 +18,9 @@ public class ClearService {
         GameDatabase.clear();
         UserDatabase.clear();
     }
+
+//    public void isEmpty() throws DataAccessException {
+//        Boolean output = true;
+//        if (this.AuthDatabase.)
+//    }
 }
