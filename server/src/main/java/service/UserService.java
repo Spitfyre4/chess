@@ -6,12 +6,13 @@ import model.AuthData;
 import model.UserData;
 
 public class UserService {
-    private final AuthDAO AuthDatabase;
-    private final UserDAO UserDatabase;
 
-    public UserService(){
-        this.AuthDatabase = new MemoryAuthDAO();
-        this.UserDatabase = new MemoryUserDAO();
+    private final UserDAO UserDatabase;
+    private final AuthDAO AuthDatabase;
+
+    public UserService(UserDAO UserDatabase, AuthDAO AuthDatabase){
+        this.UserDatabase = UserDatabase;
+        this.AuthDatabase = AuthDatabase;
     }
     public AuthData register(UserData user) {
         user = UserDatabase.createUser(user);

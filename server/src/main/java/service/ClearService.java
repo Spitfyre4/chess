@@ -3,14 +3,17 @@ package service;
 import dataAccess.*;
 
 public class ClearService {
+
+    public final UserDAO UserDatabase;
     public final AuthDAO AuthDatabase;
     public final GameDAO GameDatabase;
-    public final UserDAO UserDatabase;
 
-    public ClearService(){
-        this.AuthDatabase = new MemoryAuthDAO();
-        this.GameDatabase = new MemoryGameDAO();
-        this.UserDatabase = new MemoryUserDAO();
+
+    public ClearService(UserDAO UserDatabase, AuthDAO AuthDatabase, GameDAO GameDatabase){
+        this.UserDatabase = UserDatabase;
+        this.AuthDatabase = AuthDatabase;
+        this.GameDatabase = GameDatabase;
+
     }
 
     public void clear() throws DataAccessException {

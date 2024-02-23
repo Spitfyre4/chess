@@ -14,19 +14,19 @@ public class MemoryAuthDAO implements AuthDAO{
     public AuthData createAuth(String username) {
         String authToken = UUID.randomUUID().toString();
         AuthData auth = new AuthData(authToken, username);
-        authTokens.put(username, auth);
+        authTokens.put(authToken, auth);
 
         return auth;
     }
 
     @Override
     public AuthData getAuth(String authToken) {
-        return null;
+        return authTokens.get(authToken);
     }
 
     @Override
     public void deleteAuth(String authToken) {
-
+        authTokens.remove(authToken);
     }
     @Override
     public void clear() {

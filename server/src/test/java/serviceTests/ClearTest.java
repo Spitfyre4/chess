@@ -1,6 +1,6 @@
 package serviceTests;
 
-import dataAccess.DataAccessException;
+import dataAccess.*;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,10 @@ public class ClearTest {
 
     @BeforeEach
     public void setup(){
-        ClearService MyClearService = new ClearService();
+        UserDAO UserDatabase = new MemoryUserDAO();
+        AuthDAO AuthDatabase = new MemoryAuthDAO();
+        GameDAO GameDatabase = new MemoryGameDAO();
+        ClearService MyClearService = new ClearService(UserDatabase, AuthDatabase, GameDatabase);
     }
 
     @Test

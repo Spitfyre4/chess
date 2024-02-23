@@ -1,5 +1,9 @@
 package serviceTests;
 
+import dataAccess.AuthDAO;
+import dataAccess.MemoryAuthDAO;
+import dataAccess.MemoryUserDAO;
+import dataAccess.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
 import service.UserService;
 
@@ -9,6 +13,8 @@ public class UserTest {
 
     @BeforeEach
     public void setup(){
-        UserService MyUserService = new UserService();
+        UserDAO UserDatabase = new MemoryUserDAO();
+        AuthDAO AuthDatabase = new MemoryAuthDAO();
+        UserService MyUserService = new UserService(UserDatabase, AuthDatabase);
     }
 }
