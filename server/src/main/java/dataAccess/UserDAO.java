@@ -7,11 +7,11 @@ import java.util.Collection;
 
 public interface UserDAO {
 
-    public UserData createUser(UserData user);
+    public UserData createUser(UserData user)  throws DataAccessException;
 
-    public UserData getUser(String username);
+    public UserData getUser(String username)  throws DataAccessException;
 
-    public Collection<UserData> listUsers();
+    public Collection<UserData> listUsers()  throws DataAccessException;
 
-    public void clear();
+    public void clear()  throws DataAccessException;
 }

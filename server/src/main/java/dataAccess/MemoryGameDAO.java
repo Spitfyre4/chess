@@ -12,7 +12,7 @@ public class MemoryGameDAO implements GameDAO{
     //revisit this to see if you should change gameID to an Integer object or not
 
     @Override
-    public GameData createGame(GameData game) {
+    public GameData createGame(GameData game) throws DataAccessException{
         game = new GameData
                 (game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         games.put(game.gameID(), game);
@@ -20,22 +20,22 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public GameData getGame(int gameID) {
+    public GameData getGame(int gameID) throws DataAccessException{
         return games.get(gameID);
     }
 
     @Override
-    public Collection<GameData> listGames() {
+    public Collection<GameData> listGames() throws DataAccessException{
         return games.values();
     }
 
     @Override
-    public void updateGame(int gameID) {
+    public void updateGame(int gameID) throws DataAccessException{
 
     }
 
     @Override
-    public void clear() {
+    public void clear() throws DataAccessException{
         games.clear();
     }
 }

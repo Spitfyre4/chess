@@ -23,6 +23,10 @@ public class ClearTest {
     }
 
     @Test
+    public void testIsEmpty() throws DataAccessException {
+        assertTrue(this.MyClearService.isEmpty());
+    }
+    @Test
     public void testClear() throws DataAccessException {
         MyClearService.UserDatabase.createUser
                 (new UserData("testName", "testPass", "testEmail"));

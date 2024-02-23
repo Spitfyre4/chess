@@ -7,13 +7,13 @@ import java.util.Collection;
 
 public interface AuthDAO {
 
-    public AuthData createAuth(String username);
+    public AuthData createAuth(String username) throws DataAccessException;
 
-    public AuthData getAuth(String authToken);
+    public AuthData getAuth(String authToken) throws DataAccessException;
 
-    public void deleteAuth(String authToken);
+    public void deleteAuth(String authToken) throws DataAccessException;
 
-    public Collection<AuthData> listAuths();
+    public Collection<AuthData> listAuths() throws DataAccessException;
 
-    public void clear();
+    public void clear() throws DataAccessException;
 }
