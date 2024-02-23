@@ -7,8 +7,8 @@ import model.UserData;
 
 public class UserService {
 
-    private final UserDAO UserDatabase;
-    private final AuthDAO AuthDatabase;
+    public final UserDAO UserDatabase;
+    public final AuthDAO AuthDatabase;
 
     public UserService(UserDAO UserDatabase, AuthDAO AuthDatabase){
         this.UserDatabase = UserDatabase;

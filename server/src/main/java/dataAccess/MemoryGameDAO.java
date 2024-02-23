@@ -8,8 +8,7 @@ import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
 
-    final private HashMap<Integer, GameData> games = new HashMap<>(); //can't use int because it's not an object
-    //revisit this to see if you should change gameID to an Integer object or not
+    final private HashMap<Integer, GameData> games = new HashMap<>();
 
     @Override
     public GameData createGame(GameData game) throws DataAccessException{
