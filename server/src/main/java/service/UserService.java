@@ -14,10 +14,17 @@ public class UserService {
         this.UserDatabase = UserDatabase;
         this.AuthDatabase = AuthDatabase;
     }
-    public AuthData register(UserData user) {
+    public AuthData register(UserData user) throws DataAccessException {
         user = UserDatabase.createUser(user);
         return AuthDatabase.createAuth(user.username());
     }
-//    public AuthData login(UserData user) {}
-//    public void logout(UserData user) {}
+    public AuthData login(UserData user) throws DataAccessException {
+        UserDatabase.loginCheck(user);
+
+        return AuthDatabase.createAuth(user.username());
+    }
+
+    public void logout(AuthData auth) throws DataAccessException{
+        AuthDatabase.deleteAuth(auth.authToken());
+    }
 }
