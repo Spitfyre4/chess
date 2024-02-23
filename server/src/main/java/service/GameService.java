@@ -16,7 +16,7 @@ public class GameService {
         this.GameDatabase = GameDatabase;
 
     }
-//    public Collection<GameData> listGames(UserData user) {}
+//    public Collection<GameData> listGames() {}
 //    public GameData createGame(UserData user) {}
 //    public void joinGame(UserData user) {}
 }

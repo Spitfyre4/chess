@@ -21,10 +21,10 @@ public class ClearTest {
     @Test
     public void testClear() throws DataAccessException {
         MyClearService.UserDatabase.createUser
-                (new UserData("testname", "testpass", "testemail"));
+                (new UserData("testName", "testPass", "testEmail"));
         MyClearService.UserDatabase.createUser
-                (new UserData("testname2", "testpass2", "testemail2"));
-        //MyClearService.AuthDatabase issue atm is authtokens get made in the other service
+                (new UserData("testName2", "testPass2", "testEmail2"));
+        //MyClearService.AuthDatabase issue atm is auth tokens get made in the other service
         this.MyClearService.clear();
 
     }
