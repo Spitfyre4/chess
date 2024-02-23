@@ -2,6 +2,7 @@ package dataAccess;
 
 import model.UserData;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class MemoryUserDAO implements UserDAO{
@@ -18,6 +19,11 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public UserData getUser(String username) {
         return users.get(username);
+    }
+
+    @Override
+    public Collection<UserData> listUsers() {
+        return users.values();
     }
 
     @Override

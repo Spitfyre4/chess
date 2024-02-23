@@ -22,8 +22,12 @@ public class ClearService {
         UserDatabase.clear();
     }
 
-//    public void isEmpty() throws DataAccessException {
-//        Boolean output = true;
-//        if (this.AuthDatabase.)
-//    }
+    public boolean isEmpty() throws DataAccessException {
+        boolean output = false;
+        if (this.AuthDatabase.listAuths().isEmpty() && this.GameDatabase.listGames().isEmpty() && this.UserDatabase.listUsers().isEmpty()){
+            output = true;
+        }
+
+        return output;
+    }
 }
