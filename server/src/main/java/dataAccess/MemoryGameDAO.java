@@ -5,6 +5,7 @@ import model.GameData;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO{
 
@@ -30,6 +31,22 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public void updateGame(int gameID) throws DataAccessException{
+
+    }
+
+    @Override
+    public void joinGame(int gameId, String username, String playerColor) throws DataAccessException {
+        GameData game = games.get(gameId);
+        if(Objects.equals(playerColor, "White") && game.whiteUsername() == null){
+            GameData updatedGame = new GameData(gameId, username, game.blackUsername(), game.gameName(), game.game());
+            games.put(gameId, updatedGame);
+        }
+        else if (Objects.equals(playerColor, "Black") && game.blackUsername() == null) {
+            GameData updatedGame = new GameData(gameId, game.whiteUsername(), username, game.gameName(), game.game());
+            games.put(gameId, updatedGame);
+        }else {
+            throw new DataAccessException("Player already assigned to color");
+        }
 
     }
 

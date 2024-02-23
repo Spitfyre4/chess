@@ -36,7 +36,7 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public boolean loginCheck(UserData user) throws DataAccessException {
+    public boolean userExists(UserData user) throws DataAccessException {
         if (!users.containsKey(user.username())){
             throw new DataAccessException("Username doesn't exist");
         }

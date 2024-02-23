@@ -19,7 +19,7 @@ public class UserService {
         return AuthDatabase.createAuth(user.username());
     }
     public AuthData login(UserData user) throws DataAccessException {
-        UserDatabase.loginCheck(user);
+        UserDatabase.userExists(user);
 
         return AuthDatabase.createAuth(user.username());
     }

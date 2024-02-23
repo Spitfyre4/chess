@@ -15,5 +15,7 @@ public interface AuthDAO {
 
     public Collection<AuthData> listAuths() throws DataAccessException;
 
+    public void userLoggedIn(UserData user, AuthData auth) throws DataAccessException;
+
     public void clear() throws DataAccessException;
 }

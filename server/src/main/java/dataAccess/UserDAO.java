@@ -13,7 +13,7 @@ public interface UserDAO {
 
     public Collection<UserData> listUsers()  throws DataAccessException;
 
-    public boolean loginCheck(UserData user) throws DataAccessException;
+    public boolean userExists(UserData user) throws DataAccessException;
 
     public void clear()  throws DataAccessException;
 }

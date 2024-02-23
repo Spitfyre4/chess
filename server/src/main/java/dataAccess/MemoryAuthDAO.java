@@ -5,6 +5,7 @@ import model.UserData;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDAO{
@@ -40,6 +41,14 @@ public class MemoryAuthDAO implements AuthDAO{
     public Collection<AuthData> listAuths() throws DataAccessException{
         return authTokens.values();
     }
+
+    @Override     //Unclear how to get the authToken right now, come back to later
+    public void userLoggedIn(UserData user, AuthData auth) throws DataAccessException {
+        if (!Objects.equals(authTokens.get(auth.authToken()).username(), auth.username())){
+            throw new DataAccessException("Incorrect Auth Token");
+        }
+    }
+
 
     @Override
     public void clear() throws DataAccessException{
