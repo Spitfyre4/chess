@@ -35,8 +35,9 @@ public class GameService {
     }
     public void joinGame(UserData user, String playerColor, int gameID) throws DataAccessException{
         if(playerColor != null){
-
+            GameDatabase.getGame(gameID); //checks if game exists
+            joinGame(user, playerColor, gameID);
         }
-
+        //add as observer if null
     }
 }
