@@ -37,7 +37,7 @@ public class UserTest {
         try {
             MyUserService.register(new UserData("test1", "testP2", "testEmail2"));
         } catch (DataAccessException e) {
-            assertEquals("Username already exists", e.getMessage());
+            assertEquals("Error: already taken", e.getMessage());
         }
     }
 
