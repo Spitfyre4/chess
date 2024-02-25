@@ -16,7 +16,7 @@ public class KingMovesCalc  extends PieceMovesCalc{
     @Override
     public Collection<ChessMove> legalMoveCalc() {
         int startRow = position.getRow();
-        int start_col = position.getColumn();
+        int startCol = position.getColumn();
         ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
         ChessPosition end_pos;
         ChessMove possible_move;
@@ -35,7 +35,7 @@ public class KingMovesCalc  extends PieceMovesCalc{
             int x = pos.getRow();
             int y = pos.getColumn();
 
-            end_pos = new ChessPosition(startRow + x, start_col + y);
+            end_pos = new ChessPosition(startRow + x, startCol + y);
             possible_move = new ChessMove(position, end_pos, null);
 
             if (offBoard(end_pos)){
