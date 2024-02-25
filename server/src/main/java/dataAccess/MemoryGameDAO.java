@@ -1,6 +1,5 @@
 package dataAccess;
 
-import model.AuthData;
 import model.GameData;
 
 import java.util.Collection;
@@ -12,11 +11,10 @@ public class MemoryGameDAO implements GameDAO{
     final private HashMap<Integer, GameData> games = new HashMap<>();
 
     @Override
-    public GameData createGame(GameData game) throws DataAccessException{
+    public void createGame(GameData game) throws DataAccessException{
         game = new GameData
                 (game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         games.put(game.gameID(), game);
-        return game;
     }
 
     @Override

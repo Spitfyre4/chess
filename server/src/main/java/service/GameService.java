@@ -17,10 +17,10 @@ public class GameService {
     public final GameDAO gameDatabase;
     private int nextId = 1;
 
-    public GameService(UserDAO UserDatabase, AuthDAO AuthDatabase, GameDAO GameDatabase){
-        this.userDatabase = UserDatabase;
-        this.authDatabase = AuthDatabase;
-        this.gameDatabase = GameDatabase;
+    public GameService(UserDAO userDatabase, AuthDAO authDatabase, GameDAO gameDatabase){
+        this.userDatabase = userDatabase;
+        this.authDatabase = authDatabase;
+        this.gameDatabase = gameDatabase;
     }
 
     public Collection<GameData> listGames(String authToken) throws DataAccessException {
