@@ -41,7 +41,7 @@ public class Server {
                 (new GameHandler(myGameService)).listGames(req, res));
 
         Spark.post("/game", (req, res) ->
-                (new GameHandler(myGameService)).listGames(req, res));
+                (new GameHandler(myGameService)).createGame(req, res));
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 

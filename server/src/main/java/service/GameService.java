@@ -35,10 +35,10 @@ public class GameService {
         nextId++;
         return output;
     }
-    public void joinGame(UserData user, String playerColor, int gameID) throws DataAccessException{
+    public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException{
         if(playerColor != null){
             gameDatabase.getGame(gameID); //checks if game exists
-            joinGame(user, playerColor, gameID);
+            gameDatabase.joinGame(authToken, playerColor, gameID);
         }
         //add as observer if null
     }
