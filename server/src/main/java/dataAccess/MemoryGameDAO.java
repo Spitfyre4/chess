@@ -22,7 +22,7 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public GameData getGame(int gameID) throws DataAccessException{
         if (!games.containsKey(gameID)){
-            throw new DataAccessException("Game doesn't exist");
+            throw new DataAccessException("Error: bad request", 400);
         }
         return games.get(gameID);
     }
@@ -48,7 +48,7 @@ public class MemoryGameDAO implements GameDAO{
             GameData updatedGame = new GameData(gameId, game.whiteUsername(), username, game.gameName(), game.game());
             games.put(gameId, updatedGame);
         }else {
-            throw new DataAccessException("Player already assigned to color");
+            throw new DataAccessException("Error: already taken", 403);
         }
 
     }

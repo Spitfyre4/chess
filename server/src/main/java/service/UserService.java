@@ -15,6 +15,10 @@ public class UserService {
         this.AuthDatabase = AuthDatabase;
     }
     public AuthData register(UserData user) throws DataAccessException {
+        if(user.username() == null || user.password() == null || user.email() == null){
+            System.out.println("bado");
+            throw new DataAccessException("Error: Bad request", 400);
+        }
         user = UserDatabase.createUser(user);
         return AuthDatabase.createAuth(user.username());
     }

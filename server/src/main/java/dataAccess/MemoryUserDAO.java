@@ -12,7 +12,7 @@ public class MemoryUserDAO implements UserDAO{
 
     public UserData createUser(UserData user) throws DataAccessException{
         if (users.containsKey(user.username())) {
-            throw new DataAccessException("Error: already taken");
+            throw new DataAccessException("Error: already taken", 403);
         }
 
         user = new UserData(user.username(), user.password(), user.email());
@@ -24,7 +24,7 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public UserData getUser(String username) throws DataAccessException{
         if (!users.containsKey(username)){
-            throw new DataAccessException("User doesn't exist");
+            throw new DataAccessException("Error: bad request", 400);
         }
 
         return users.get(username);
@@ -38,13 +38,13 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public boolean userExists(UserData user) throws DataAccessException {
         if (!users.containsKey(user.username())){
-            throw new DataAccessException("Username doesn't exist");
+            throw new DataAccessException("Error: bad request", 400);
         }
 
         UserData trueUser = getUser(user.username());
 
         if(!Objects.equals(user.password(), trueUser.password())){
-            throw new DataAccessException("Incorrect Password");
+            throw new DataAccessException("Error: unauthorized", 401);
         }
 
         return true;

@@ -20,24 +20,21 @@ public class UserHandler {
     public Object register(Request req, Response res) throws DataAccessException {
         var user = new Gson().fromJson(req.body(), UserData.class);
 
-        if(user.username() == null || user.password() == null || user.email() == null){
-            res.status(400);
-            return "Error: bad request";
-        }
+        AuthData auth = myUserService.register(user);
+        res.status(200);
+        return new Gson().toJson(auth);
+    }
 
-        try {
-            AuthData auth = myUserService.register(user);
-            res.status(200);
-            return new Gson().toJson(auth);
-        } catch (DataAccessException e) {
-            if(e.getMessage().equals("Error: already taken")){ //do errors in error class on server
-                res.status(403);
-                return "Error: already taken";
-            }
-        }
+    public Object login(Request req, Response res) throws DataAccessException {
+        var user = new Gson().fromJson(req.body(), UserData.class);
 
-        res.status(500);
-        return "Error: Unknown";
+        AuthData auth = myUserService.login(user);
+        res.status(200);
+        return new Gson().toJson(auth);
+    }
+
+    public Object logout(Request req, Response res) throws DataAccessException {
+        return "not ready yet";
     }
 
 

@@ -24,7 +24,7 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException{
         if(!authTokens.containsKey(authToken)) {
-            throw new DataAccessException("Auth Token doesn't exist");
+            throw new DataAccessException("Error: bad request", 400);
         }
         return authTokens.get(authToken);
     }
@@ -32,7 +32,7 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override
     public void deleteAuth(String authToken) throws DataAccessException{
         if(!authTokens.containsKey(authToken)) {
-            throw new DataAccessException("Auth Token doesn't exist");
+            throw new DataAccessException("Error: bad request", 400);
         }
         authTokens.remove(authToken);
     }
@@ -45,7 +45,7 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override     //Unclear how to get the authToken right now, come back to later
     public void userLoggedIn(UserData user, AuthData auth) throws DataAccessException {
         if (!Objects.equals(authTokens.get(auth.authToken()).username(), auth.username())){
-            throw new DataAccessException("Incorrect Auth Token");
+            throw new DataAccessException("Error: unauthorized", 401);
         }
     }
 
