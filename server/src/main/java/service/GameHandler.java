@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.GameData;
 import model.GameID;
+import model.JoinGameReq;
 import model.UserData;
 import spark.Request;
 import spark.Response;
@@ -30,12 +31,14 @@ public class GameHandler {
         return new Gson().toJson(new GameID(myGameService.createGame(game.gameName(), authToken)));
     }
 
-    public void joinGame(Request req, Response res) throws DataAccessException {
+    public Object joinGame(Request req, Response res) throws DataAccessException {
         var authToken = req.headers("authorization");
-        var game = new Gson().fromJson(req.body(), GameData.class);
+        var gameReq = new Gson().fromJson(req.body(), JoinGameReq.class);
 
+        myGameService.joinGame(authToken, gameReq.playerColor(), gameReq.gameID());
         res.status(200);
-        myGameService.joinGame(authToken, game.gameID());
+        return "Player joined game successfully";
+
 
     }
 }

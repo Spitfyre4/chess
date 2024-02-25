@@ -38,8 +38,8 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public void joinGame throws DataAccessException {
-        GameData game = games.get(gameId);(String username, String playerColor, int gameId)
+    public void joinGame(String username, String playerColor, int gameId) throws DataAccessException {
+        GameData game = games.get(gameId);
         if(Objects.equals(playerColor, "White") && game.whiteUsername() == null){
             GameData updatedGame = new GameData(gameId, username, game.blackUsername(), game.gameName(), game.game());
             games.put(gameId, updatedGame);
