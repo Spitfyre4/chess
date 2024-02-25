@@ -32,23 +32,14 @@ public class MemoryAuthDAO implements AuthDAO{
     @Override
     public void deleteAuth(String authToken) throws DataAccessException{
         if(!authTokens.containsKey(authToken)) {
-            System.out.println("inside");
             throw new DataAccessException("Error: unauthorized", 401);
         }
-        System.out.println("outside");
         authTokens.remove(authToken);
     }
 
     @Override
     public Collection<AuthData> listAuths() throws DataAccessException{
         return authTokens.values();
-    }
-
-    @Override     //Unclear how to get the authToken right now, come back to later
-    public void userLoggedIn(UserData user, AuthData auth) throws DataAccessException {
-        if (!Objects.equals(authTokens.get(auth.authToken()).username(), auth.username())){
-            throw new DataAccessException("Error: unauthorized", 401);
-        }
     }
 
 

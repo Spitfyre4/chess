@@ -67,38 +67,38 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovesCalc move_calc = null;
+        PieceMovesCalc moveCalc = null;
         ChessPiece piece = board.getPiece(myPosition);
 
         if (piece.type == PieceType.BISHOP){
-            move_calc = new BishopMovesCalc(board, myPosition);
+            moveCalc = new BishopMovesCalc(board, myPosition);
         }
 
         if (piece.type == PieceType.KING){
-            move_calc = new KingMovesCalc(board, myPosition);
+            moveCalc = new KingMovesCalc(board, myPosition);
         }
 
         if (piece.type == PieceType.KNIGHT){
-            move_calc = new KnightMovesCalc(board, myPosition);
+            moveCalc = new KnightMovesCalc(board, myPosition);
         }
 
         if (piece.type == PieceType.PAWN){
-            move_calc = new PawnMovesCalc(board, myPosition);
+            moveCalc = new PawnMovesCalc(board, myPosition);
         }
 
         if (piece.type == PieceType.QUEEN){
-            move_calc = new QueenMovesCalc(board, myPosition);
+            moveCalc = new QueenMovesCalc(board, myPosition);
         }
 
         if (piece.type == PieceType.ROOK){
-            move_calc = new RookMovesCalc(board, myPosition);
+            moveCalc = new RookMovesCalc(board, myPosition);
         }
 
-        if (move_calc != null) {
-            return move_calc.legalMoveCalc();
+        if (moveCalc != null) {
+            return moveCalc.legalMoveCalc();
         }
         else{
-            throw new RuntimeException("move_calc never initialized");
+            throw new RuntimeException("moveCalc never initialized");
         }
     }
 }

@@ -57,19 +57,19 @@ public class ChessGame {
         }
 
         ArrayList<ChessMove> moves = new ArrayList<>();
-        ChessBoard og_board = new ChessBoard(board);
+        ChessBoard ogBoard = new ChessBoard(board);
 
         for(ChessMove move: piece.pieceMoves(board, startPosition)){
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
-            if(isInCheck(og_board.getPiece(startPosition).getTeamColor())){
-                this.board = new ChessBoard(og_board);
+            if(isInCheck(ogBoard.getPiece(startPosition).getTeamColor())){
+                this.board = new ChessBoard(ogBoard);
                 continue;
             }
             else{
                 moves.add(move);
             }
-            this.board = new ChessBoard(og_board);
+            this.board = new ChessBoard(ogBoard);
         }
 
         return moves;
@@ -137,7 +137,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ArrayList<ChessMove> total_moves = new ArrayList<>();
+        ArrayList<ChessMove> totalMoves = new ArrayList<>();
         for(int i = 1; i <=8; i++){
             for(int j = 1; j <=8; j++){
                 ChessPosition pos = new ChessPosition(i, j);
@@ -145,10 +145,10 @@ public class ChessGame {
                 if(piece == null || piece.getTeamColor().equals(teamColor)){
                     continue;
                 }
-                total_moves.addAll(piece.pieceMoves(board, pos));
+                totalMoves.addAll(piece.pieceMoves(board, pos));
             }
         }
-        for(ChessMove move: total_moves){
+        for(ChessMove move: totalMoves){
             ChessPosition pos = move.getEndPosition();
             ChessPiece piece = board.getPiece(pos);
             if(piece != null) {
