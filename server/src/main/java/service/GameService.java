@@ -36,9 +36,9 @@ public class GameService {
         return output;
     }
     public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException{
+        gameDatabase.getGame(gameID); //checks if game exists
+        String username = authDatabase.getAuth(authToken).username();
         if(playerColor != null){
-            gameDatabase.getGame(gameID); //checks if game exists
-            String username = authDatabase.getAuth(authToken).username();
             gameDatabase.joinGame(username, playerColor, gameID);
         }
         //add as observer if null

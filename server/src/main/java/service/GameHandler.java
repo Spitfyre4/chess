@@ -2,10 +2,7 @@ package service;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
-import model.GameData;
-import model.GameID;
-import model.JoinGameReq;
-import model.UserData;
+import model.*;
 import spark.Request;
 import spark.Response;
 
@@ -20,7 +17,7 @@ public class GameHandler {
     public Object listGames(Request req, Response res) throws DataAccessException {
         var authToken = req.headers("authorization");
         res.status(200);
-        return new Gson().toJson(myGameService.listGames(authToken));
+        return new Gson().toJson(new GamesData(myGameService.listGames(authToken)));
     }
 
     public Object createGame(Request req, Response res) throws DataAccessException {
@@ -37,7 +34,7 @@ public class GameHandler {
 
         myGameService.joinGame(authToken, gameReq.playerColor(), gameReq.gameID());
         res.status(200);
-        return "Player joined game successfully";
+        return "{}";
 
 
     }
