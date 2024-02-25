@@ -5,10 +5,11 @@ import chess.ChessMove;
 import chess.ChessPosition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
-public class Knight_Moves_Calc extends PieceMovesCalc{
-    public Knight_Moves_Calc(ChessBoard board, ChessPosition position) {
+public class KingMovesCalc  extends PieceMovesCalc{
+    public KingMovesCalc(ChessBoard board, ChessPosition position) {
         super(board, position);
     }
 
@@ -21,14 +22,14 @@ public class Knight_Moves_Calc extends PieceMovesCalc{
         ChessMove possible_move;
 
         ArrayList<ChessPosition> moves = new ArrayList<ChessPosition>();
-        moves.add(new ChessPosition(2,1));
-        moves.add(new ChessPosition(1,2));
-        moves.add(new ChessPosition(-1,2));
-        moves.add(new ChessPosition(-2,1));
-        moves.add(new ChessPosition(-2,-1));
-        moves.add(new ChessPosition(-1,-2));
-        moves.add(new ChessPosition(1,-2));
-        moves.add(new ChessPosition(2,-1));
+        moves.add(new ChessPosition(1,0));
+        moves.add(new ChessPosition(1,1));
+        moves.add(new ChessPosition(0,1));
+        moves.add(new ChessPosition(-1,1));
+        moves.add(new ChessPosition(-1,0));
+        moves.add(new ChessPosition(-1,-1));
+        moves.add(new ChessPosition(0,-1));
+        moves.add(new ChessPosition(1,-1));
 
         for(ChessPosition pos : moves){
             int x = pos.getRow();
@@ -52,5 +53,5 @@ public class Knight_Moves_Calc extends PieceMovesCalc{
 
         return legal_moves;
     }
-    }
 
+}

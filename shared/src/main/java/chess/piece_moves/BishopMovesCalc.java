@@ -7,8 +7,8 @@ import chess.ChessPosition;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Rook_Moves_Calc  extends PieceMovesCalc{
-    public Rook_Moves_Calc(ChessBoard board, ChessPosition position) {
+public class BishopMovesCalc extends PieceMovesCalc{
+    public BishopMovesCalc(ChessBoard board, ChessPosition position) {
         super(board, position);
     }
 
@@ -20,10 +20,11 @@ public class Rook_Moves_Calc  extends PieceMovesCalc{
         ChessPosition end_pos;
         ChessMove possible_move;
 
+        int j = start_col;
+        for(int i = start_row+1; i<=8; i++){ //up right Diagonal
+            j++;
 
-        for (int i = start_row+1; i <= 8; i++){ //up
-
-            end_pos = new ChessPosition(i, start_col);
+            end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
             if (off_board(end_pos)){
                 break;
@@ -36,10 +37,14 @@ public class Rook_Moves_Calc  extends PieceMovesCalc{
                 break;
             }
             legal_moves.add(possible_move);
+
         }
 
-        for (int i = start_row-1; i > 0; i--){ //down
-            end_pos = new ChessPosition(i, start_col);
+        j = start_col;
+        for(int i = start_row+1; i<=8; i++){ //up left Diagonal
+            j--;
+
+            end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
             if (off_board(end_pos)){
                 break;
@@ -52,11 +57,14 @@ public class Rook_Moves_Calc  extends PieceMovesCalc{
                 break;
             }
             legal_moves.add(possible_move);
+
         }
 
-        for (int j = start_col+1; j <= 8; j++){ //right
+        j = start_col;
+        for(int i = start_row-1; i>0; i--){ //down right Diagonal
+            j++;
 
-            end_pos = new ChessPosition(start_row, j);
+            end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
             if (off_board(end_pos)){
                 break;
@@ -69,11 +77,14 @@ public class Rook_Moves_Calc  extends PieceMovesCalc{
                 break;
             }
             legal_moves.add(possible_move);
+
         }
 
-        for (int j = start_col-1; j > 0; j--){ //left
+        j = start_col;
+        for(int i = start_row-1; i>0; i--){ //down left Diagonal
+            j--;
 
-            end_pos = new ChessPosition(start_row, j);
+            end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
             if (off_board(end_pos)){
                 break;
@@ -86,10 +97,11 @@ public class Rook_Moves_Calc  extends PieceMovesCalc{
                 break;
             }
             legal_moves.add(possible_move);
+
         }
-
-
 
         return legal_moves;
     }
+
+
 }

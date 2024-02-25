@@ -5,8 +5,8 @@ import chess.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Pawn_Moves_Calc  extends PieceMovesCalc{
-    public Pawn_Moves_Calc(ChessBoard board, ChessPosition position) {
+public class PawnMovesCalc  extends PieceMovesCalc{
+    public PawnMovesCalc(ChessBoard board, ChessPosition position) {
         super(board, position);
     }
 
