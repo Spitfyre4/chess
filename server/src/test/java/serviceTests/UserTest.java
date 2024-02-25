@@ -7,23 +7,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.UserService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    private UserService MyUserService;
+    private UserService myUserService;
 
     @BeforeEach
     public void setup(){
-        UserDAO UserDatabase = new MemoryUserDAO();
-        AuthDAO AuthDatabase = new MemoryAuthDAO();
-        this.MyUserService = new UserService(UserDatabase, AuthDatabase);
+        UserDAO userDatabase = new MemoryUserDAO();
+        AuthDAO authDatabase = new MemoryAuthDAO();
+        this.myUserService = new UserService(userDatabase, authDatabase);
     }
 
     @Test
     public void testRegister() throws DataAccessException {
-        AuthData auth = MyUserService.register(new UserData("test1", "testP1", "testEmail"));
-        UserData newUser = MyUserService.UserDatabase.getUser(auth.username());
+        AuthData auth = myUserService.register(new UserData("test1", "testP1", "testEmail"));
+        UserData newUser = myUserService.userDatabase.getUser(auth.username());
 
         assertEquals(new UserData("test1", "testP1", "testEmail"), newUser);
 
@@ -32,10 +32,10 @@ public class UserTest {
 
     @Test
     public void testRegisterFails() throws DataAccessException {
-        MyUserService.register(new UserData("test1", "testP1", "testEmail"));
+        myUserService.register(new UserData("test1", "testP1", "testEmail"));
 
         try {
-            MyUserService.register(new UserData("test1", "testP2", "testEmail2"));
+            myUserService.register(new UserData("test1", "testP2", "testEmail2"));
         } catch (DataAccessException e) {
             assertEquals("Error: already taken", e.getMessage());
         }
@@ -43,45 +43,36 @@ public class UserTest {
 
     @Test
     public void testLogin() throws DataAccessException {
-        MyUserService.register(new UserData("test1", "testP1", "testEmail"));
-        AuthData auth = MyUserService.login(new UserData("test1", "testP1", "testEmail"));
+        myUserService.register(new UserData("test1", "testP1", "testEmail"));
+        AuthData auth = myUserService.login(new UserData("test1", "testP1", "testEmail"));
 
-        String authToken = MyUserService.AuthDatabase.getAuth(auth.authToken()).authToken();
+        String authToken = myUserService.authDatabase.getAuth(auth.authToken()).authToken();
 
         assertEquals(auth.authToken(), authToken);
     }
 
     @Test
     public void testLoginFails() throws DataAccessException {
-        try {
-            MyUserService.login(new UserData("test1", "testP1", "testEmail1"));
-        } catch (DataAccessException e) {
-            assertEquals("Username doesn't exist", e.getMessage());
-        }
+        assertThrows(DataAccessException.class, () -> {
+            myUserService.login(new UserData("test1", "testP1", "testEmail1"));
+        });
     }
 
     @Test
     public void testLogout() throws DataAccessException {
-        MyUserService.register(new UserData("test1", "testP1", "testEmail"));
-        AuthData auth = MyUserService.login(new UserData("test1", "testP1", "testEmail"));
+        myUserService.register(new UserData("test1", "testP1", "testEmail"));
+        AuthData auth = myUserService.login(new UserData("test1", "testP1", "testEmail"));
 
-        MyUserService.logout(auth.authToken());
+        myUserService.logout(auth.authToken());
 
-        try {
-            MyUserService.AuthDatabase.getAuth(auth.authToken());
-        } catch (DataAccessException e) {
-            assertEquals("Auth Token doesn't exist", e.getMessage());
-        }
-
+        assertEquals(this.myUserService.authDatabase.listAuths().size(), 1); //1 because the register authToken is still there
 
     }
 
     @Test
     public void testLogoutFails() throws DataAccessException {
-        try {
-            MyUserService.logout("token");
-        } catch (DataAccessException e) {
-            assertEquals("Auth Token doesn't exist", e.getMessage());
-        }
+    assertThrows(DataAccessException.class, () -> {
+        myUserService.logout("fakeAuth");
+        });
     }
 }

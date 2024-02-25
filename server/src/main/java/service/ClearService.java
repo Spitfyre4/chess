@@ -4,27 +4,27 @@ import dataAccess.*;
 
 public class ClearService {
 
-    public final UserDAO UserDatabase;
-    public final AuthDAO AuthDatabase;
-    public final GameDAO GameDatabase;
+    public final UserDAO userDatabase;
+    public final AuthDAO authDatabase;
+    public final GameDAO gameDatabase;
 
 
-    public ClearService(UserDAO UserDatabase, AuthDAO AuthDatabase, GameDAO GameDatabase){
-        this.UserDatabase = UserDatabase;
-        this.AuthDatabase = AuthDatabase;
-        this.GameDatabase = GameDatabase;
+    public ClearService(UserDAO userDatabase, AuthDAO authDatabase, GameDAO gameDatabase){
+        this.userDatabase = userDatabase;
+        this.authDatabase = authDatabase;
+        this.gameDatabase = gameDatabase;
 
     }
 
     public void clear() throws DataAccessException {
-        AuthDatabase.clear();
-        GameDatabase.clear();
-        UserDatabase.clear();
+        authDatabase.clear();
+        gameDatabase.clear();
+        userDatabase.clear();
     }
 
     public boolean isEmpty() throws DataAccessException {
         boolean output = false;
-        if (this.AuthDatabase.listAuths().isEmpty() && this.GameDatabase.listGames().isEmpty() && this.UserDatabase.listUsers().isEmpty()){
+        if (this.authDatabase.listAuths().isEmpty() && this.gameDatabase.listGames().isEmpty() && this.userDatabase.listUsers().isEmpty()){
             output = true;
         }
 

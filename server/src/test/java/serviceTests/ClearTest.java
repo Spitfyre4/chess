@@ -16,10 +16,10 @@ public class ClearTest {
 
     @BeforeEach
     public void setup(){
-        UserDAO UserDatabase = new MemoryUserDAO();
-        AuthDAO AuthDatabase = new MemoryAuthDAO();
-        GameDAO GameDatabase = new MemoryGameDAO();
-        this.MyClearService = new ClearService(UserDatabase, AuthDatabase, GameDatabase);
+        UserDAO userDatabase = new MemoryUserDAO();
+        AuthDAO authDatabase = new MemoryAuthDAO();
+        GameDAO gameDatabase = new MemoryGameDAO();
+        this.MyClearService = new ClearService(userDatabase, authDatabase, gameDatabase);
     }
 
     @Test
@@ -28,15 +28,15 @@ public class ClearTest {
     }
     @Test
     public void testClear() throws DataAccessException {
-        MyClearService.UserDatabase.createUser
+        MyClearService.userDatabase.createUser
                 (new UserData("testName", "testPass", "testEmail"));
-        MyClearService.UserDatabase.createUser
+        MyClearService.userDatabase.createUser
                 (new UserData("testName2", "testPass2", "testEmail2"));
 
-        MyClearService.AuthDatabase.createAuth("testName");
-        MyClearService.AuthDatabase.createAuth("testName2");
+        MyClearService.authDatabase.createAuth("testName");
+        MyClearService.authDatabase.createAuth("testName2");
 
-        MyClearService.GameDatabase.createGame(new GameData
+        MyClearService.gameDatabase.createGame(new GameData
                 (1, "testName", "testName2", "TestGame", new ChessGame()));
 
         this.MyClearService.clear();

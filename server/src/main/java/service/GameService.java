@@ -21,9 +21,8 @@ public class GameService {
         this.userDatabase = UserDatabase;
         this.authDatabase = AuthDatabase;
         this.gameDatabase = GameDatabase;
-
-
     }
+
     public Collection<GameData> listGames(String authToken) throws DataAccessException {
         authDatabase.getAuth(authToken);
         return gameDatabase.listGames();
