@@ -14,14 +14,14 @@ public class BishopMovesCalc extends PieceMovesCalc{
 
     @Override
     public Collection<ChessMove> legalMoveCalc() {
-        int startRow = position.getRow();
+        int start_row = position.getRow();
         int start_col = position.getColumn();
         ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
         ChessPosition end_pos;
         ChessMove possible_move;
 
         int j = start_col;
-        for(int i = startRow+1; i<=8; i++){ //up right Diagonal
+        for(int i = start_row+1; i<=8; i++){ //up right Diagonal
             j++;
 
             end_pos = new ChessPosition(i, j);
@@ -41,7 +41,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
         }
 
         j = start_col;
-        for(int i = startRow+1; i<=8; i++){ //up left Diagonal
+        for(int i = start_row+1; i<=8; i++){ //up left Diagonal
             j--;
 
             end_pos = new ChessPosition(i, j);
@@ -61,7 +61,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
         }
 
         j = start_col;
-        for(int i = startRow-1; i>0; i--){ //down right Diagonal
+        for(int i = start_row-1; i>0; i--){ //down right Diagonal
             j++;
 
             end_pos = new ChessPosition(i, j);
@@ -81,7 +81,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
         }
 
         j = start_col;
-        for(int i = startRow-1; i>0; i--){ //down left Diagonal
+        for(int i = start_row-1; i>0; i--){ //down left Diagonal
             j--;
 
             end_pos = new ChessPosition(i, j);
