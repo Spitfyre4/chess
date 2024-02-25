@@ -25,7 +25,7 @@ public class RookMovesCalc  extends PieceMovesCalc{
 
             end_pos = new ChessPosition(i, start_col);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -41,7 +41,7 @@ public class RookMovesCalc  extends PieceMovesCalc{
         for (int i = start_row-1; i > 0; i--){ //down
             end_pos = new ChessPosition(i, start_col);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -58,7 +58,7 @@ public class RookMovesCalc  extends PieceMovesCalc{
 
             end_pos = new ChessPosition(start_row, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -75,7 +75,7 @@ public class RookMovesCalc  extends PieceMovesCalc{
 
             end_pos = new ChessPosition(start_row, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 

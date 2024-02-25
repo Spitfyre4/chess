@@ -58,7 +58,7 @@ public class PawnMovesCalc  extends PieceMovesCalc{
 
 
             end_pos = new ChessPosition(start_row + 1, start_col + 1); //capture up right
-            if(!off_board(end_pos)){
+            if(!offBoard(end_pos)){
             if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.WHITE) {
                 if (end_pos.getRow() == 8) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
@@ -81,7 +81,7 @@ public class PawnMovesCalc  extends PieceMovesCalc{
             }
 
             end_pos = new ChessPosition(start_row + 1, start_col - 1); //capture up left
-            if(!off_board(end_pos)) {
+            if(!offBoard(end_pos)) {
             if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.WHITE) {
                 if (end_pos.getRow() == 8) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
@@ -144,7 +144,7 @@ public class PawnMovesCalc  extends PieceMovesCalc{
 
 
             end_pos = new ChessPosition(start_row - 1, start_col - 1); //capture down left
-            if(!off_board(end_pos)) {
+            if(!offBoard(end_pos)) {
                 if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
                     if (end_pos.getRow() == 1) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
@@ -166,7 +166,7 @@ public class PawnMovesCalc  extends PieceMovesCalc{
             }
 
             end_pos = new ChessPosition(start_row - 1, start_col + 1); //capture down right
-            if(!off_board(end_pos)) {
+            if(!offBoard(end_pos)) {
                 if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
                     if (end_pos.getRow() == 1) {
                         possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);

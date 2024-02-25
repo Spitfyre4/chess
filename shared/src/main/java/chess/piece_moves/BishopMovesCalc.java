@@ -26,7 +26,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
 
             end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -46,7 +46,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
 
             end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -66,7 +66,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
 
             end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 
@@ -86,7 +86,7 @@ public class BishopMovesCalc extends PieceMovesCalc{
 
             end_pos = new ChessPosition(i, j);
             possible_move = new ChessMove(position, end_pos, null);
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 break;
             }
 

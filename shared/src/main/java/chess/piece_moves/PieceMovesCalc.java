@@ -17,7 +17,7 @@ public abstract class PieceMovesCalc {
 
     public abstract Collection<ChessMove> legalMoveCalc();
 
-    public boolean off_board(ChessPosition pos){
+    public boolean offBoard(ChessPosition pos){
         int row = pos.getRow();
         int col = pos.getColumn();
 

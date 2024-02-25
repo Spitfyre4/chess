@@ -38,7 +38,7 @@ public class KingMovesCalc  extends PieceMovesCalc{
             end_pos = new ChessPosition(start_row + x, start_col + y);
             possible_move = new ChessMove(position, end_pos, null);
 
-            if (off_board(end_pos)){
+            if (offBoard(end_pos)){
                 continue;
             }
 
