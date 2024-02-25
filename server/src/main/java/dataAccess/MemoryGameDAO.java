@@ -30,10 +30,6 @@ public class MemoryGameDAO implements GameDAO{
         return games.values();
     }
 
-    @Override
-    public void updateGame(int gameID) throws DataAccessException{
-
-    }
 
     @Override
     public void joinGame(String username, String playerColor, int gameId) throws DataAccessException {

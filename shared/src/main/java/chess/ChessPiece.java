@@ -2,7 +2,7 @@ package chess;
 
 import chess.piece_moves.Bishop_Moves_Calc;
 import chess.piece_moves.King_Moves_Calc;
-import chess.piece_moves.Piece_Moves_Calc;
+import chess.piece_moves.PieceMovesCalc;
 import chess.piece_moves.*;
 
 import java.util.Collection;
@@ -69,7 +69,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Piece_Moves_Calc move_calc = null;
+        PieceMovesCalc move_calc = null;
         ChessPiece piece = board.getPiece(myPosition);
 
         if (piece.type == PieceType.BISHOP){
@@ -97,7 +97,7 @@ public class ChessPiece {
         }
 
         if (move_calc != null) {
-            return move_calc.legal_move_calc();
+            return move_calc.legalMoveCalc();
         }
         else{
             throw new RuntimeException("move_calc never initialized");

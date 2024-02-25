@@ -86,7 +86,7 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         ChessPiece piece = board.getPiece(startPosition);
 
-        if (off_board(move.getEndPosition()) || off_board(move.getStartPosition()) || piece.getTeamColor()!=this.turn){
+        if (offBoard(move.getEndPosition()) || offBoard(move.getStartPosition()) || piece.getTeamColor()!=this.turn){
             throw new InvalidMoveException();
         }
 
@@ -112,7 +112,7 @@ public class ChessGame {
 
     }
 
-    public boolean off_board(int i, int j){
+    public boolean offBoard(int i, int j){
         if(i<1 || i>8){
             return true;
         }
@@ -124,10 +124,10 @@ public class ChessGame {
         }
     }
 
-    public boolean off_board(ChessPosition pos){
+    public boolean offBoard(ChessPosition pos){
         int i = pos.getRow();
         int j = pos.getColumn();
-        return this.off_board(i, j);
+        return this.offBoard(i, j);
     }
 
     /**

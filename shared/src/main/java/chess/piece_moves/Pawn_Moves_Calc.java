@@ -5,13 +5,13 @@ import chess.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Pawn_Moves_Calc  extends Piece_Moves_Calc{
+public class Pawn_Moves_Calc  extends PieceMovesCalc{
     public Pawn_Moves_Calc(ChessBoard board, ChessPosition position) {
         super(board, position);
     }
 
     @Override
-    public Collection<ChessMove> legal_move_calc() {
+    public Collection<ChessMove> legalMoveCalc() {
         int start_row = position.getRow();
         int start_col = position.getColumn();
         ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
