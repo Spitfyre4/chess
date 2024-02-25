@@ -12,30 +12,32 @@ import java.util.Collection;
 
 public class GameService {
 
-    public final UserDAO UserDatabase;
-    public final AuthDAO AuthDatabase;
-    public final GameDAO GameDatabase;
+    public final UserDAO userDatabase;
+    public final AuthDAO authDatabase;
+    public final GameDAO gameDatabase;
     private int nextId = 1;
 
     public GameService(UserDAO UserDatabase, AuthDAO AuthDatabase, GameDAO GameDatabase){
-        this.UserDatabase = UserDatabase;
-        this.AuthDatabase = AuthDatabase;
-        this.GameDatabase = GameDatabase;
+        this.userDatabase = UserDatabase;
+        this.authDatabase = AuthDatabase;
+        this.gameDatabase = GameDatabase;
 
 
     }
-    public Collection<GameData> listGames() throws DataAccessException {
-        return GameDatabase.listGames();
+    public Collection<GameData> listGames(String authToken) throws DataAccessException {
+        authDatabase.getAuth(authToken);
+        return gameDatabase.listGames();
     }
-    public int createGame(String name) throws DataAccessException{
-        GameDatabase.createGame(new GameData(nextId, null, null, name, new ChessGame()));
+    public int createGame(String name, String authToken) throws DataAccessException{
+        authDatabase.getAuth(authToken);
+        gameDatabase.createGame(new GameData(nextId, null, null, name, new ChessGame()));
         int output = nextId;
         nextId++;
         return output;
     }
     public void joinGame(UserData user, String playerColor, int gameID) throws DataAccessException{
         if(playerColor != null){
-            GameDatabase.getGame(gameID); //checks if game exists
+            gameDatabase.getGame(gameID); //checks if game exists
             joinGame(user, playerColor, gameID);
         }
         //add as observer if null

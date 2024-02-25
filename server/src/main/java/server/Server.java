@@ -34,8 +34,14 @@ public class Server {
         Spark.post("/session", (req, res) ->
                 (new UserHandler(myUserService)).login(req, res));
 
-        Spark.post("/session", (req, res) ->
+        Spark.delete("/session", (req, res) ->
                 (new UserHandler(myUserService)).logout(req, res));
+
+        Spark.get("/game", (req, res) ->
+                (new GameHandler(myGameService)).listGames(req, res));
+
+        Spark.post("/game", (req, res) ->
+                (new GameHandler(myGameService)).listGames(req, res));
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 

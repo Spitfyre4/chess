@@ -65,7 +65,7 @@ public class UserTest {
         MyUserService.register(new UserData("test1", "testP1", "testEmail"));
         AuthData auth = MyUserService.login(new UserData("test1", "testP1", "testEmail"));
 
-        MyUserService.logout(auth);
+        MyUserService.logout(auth.authToken());
 
         try {
             MyUserService.AuthDatabase.getAuth(auth.authToken());
@@ -79,7 +79,7 @@ public class UserTest {
     @Test
     public void testLogoutFails() throws DataAccessException {
         try {
-            MyUserService.logout(new AuthData("token", "username"));;
+            MyUserService.logout("token");
         } catch (DataAccessException e) {
             assertEquals("Auth Token doesn't exist", e.getMessage());
         }

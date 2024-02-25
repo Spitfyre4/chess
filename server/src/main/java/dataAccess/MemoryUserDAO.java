@@ -38,7 +38,7 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public boolean userExists(UserData user) throws DataAccessException {
         if (!users.containsKey(user.username())){
-            throw new DataAccessException("Error: bad request", 400);
+            throw new DataAccessException("Error: unauthorized", 401);
         }
 
         UserData trueUser = getUser(user.username());

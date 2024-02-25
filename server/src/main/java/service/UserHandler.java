@@ -34,7 +34,12 @@ public class UserHandler {
     }
 
     public Object logout(Request req, Response res) throws DataAccessException {
-        return "not ready yet";
+        var authToken = req.headers("authorization");
+
+        myUserService.logout(authToken);
+        res.status(200);
+
+        return "{}";
     }
 
 
