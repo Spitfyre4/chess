@@ -51,7 +51,7 @@ public class PawnMovesCalc  extends PieceMovesCalc {
 
         if(diagonal) {
             if (!offBoard(end_pos)) {
-                if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != board.getPiece(position).piececolor) {
+                if (board.getPiece(end_pos) != null && board.getPiece(end_pos).pieceColor != board.getPiece(position).pieceColor) {
                     if (end_pos.getRow() == 1) {
                         promotionAdd(end_pos);
                     } else {
@@ -63,11 +63,12 @@ public class PawnMovesCalc  extends PieceMovesCalc {
         }
     }
 
-    public void doubleMove(int row, int col){
-        ChessPosition end_pos1 = new ChessPosition(row+ 1, col);
+    public void doubleMove(int row, int col, boolean isBlack){
+        int direction = isBlack ? -1 : 1;
+        ChessPosition end_pos1 = new ChessPosition(row + direction, col);
         ChessMove mov1 = new ChessMove(position, end_pos1, null);
 
-        ChessPosition end_pos2 = new ChessPosition(row + 2, col);
+        ChessPosition end_pos2 = new ChessPosition(row + (2 * direction), col);
         ChessMove mov2 = new ChessMove(position, end_pos2, null);
 
         if (board.getPiece(end_pos1) == null) {
@@ -87,7 +88,7 @@ public class PawnMovesCalc  extends PieceMovesCalc {
 
         if (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.WHITE) { //WHITE Moves
             if (startRow == 2) { //double move
-                doubleMove(startRow, startCol);
+                doubleMove(startRow, startCol, false);
             }
 
             //forward move
@@ -103,90 +104,20 @@ public class PawnMovesCalc  extends PieceMovesCalc {
 
             if (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.BLACK) { //BLACK Moves
                 if (startRow == 7) { //double move
-                    ChessPosition end_pos1 = new ChessPosition(startRow - 1, startCol);
-                    ChessMove mov1 = new ChessMove(position, end_pos1, null);
-
-                    ChessPosition end_pos2 = new ChessPosition(startRow - 2, startCol);
-                    ChessMove mov2 = new ChessMove(position, end_pos2, null);
-
-                    if (board.getPiece(end_pos1) == null) {
-                        legal_moves.add(mov1);
-                        if (board.getPiece(end_pos2) == null) {
-                            legal_moves.add(mov2);
-                        }
-                    }
+                    doubleMove(startRow, startCol, true);
                 }
+                //forward move
+                this.singleMoveLoop(startRow - 1, startCol, ChessGame.TeamColor.BLACK, false);
 
-                end_pos = new ChessPosition(startRow - 1, startCol); //forward move
-                if (end_pos.getRow() == 1) {
-                    if (board.getPiece(end_pos) == null) {
-                        possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
-                        legal_moves.add(possible_move);
+                //capture down left
+                this.singleMoveLoop(startRow - 1, startCol-1, ChessGame.TeamColor.BLACK, true);
 
-                        possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.KNIGHT);
-                        legal_moves.add(possible_move);
-
-                        possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.QUEEN);
-                        legal_moves.add(possible_move);
-
-                        possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.ROOK);
-                        legal_moves.add(possible_move);
-                    }
-                } else {
-                    if (board.getPiece(end_pos) == null) {
-                        possible_move = new ChessMove(position, end_pos, null);
-                        legal_moves.add(possible_move);
-                    }
-                }
-
-
-                end_pos = new ChessPosition(startRow - 1, startCol - 1); //capture down left
-                if (!offBoard(end_pos)) {
-                    if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
-                        if (end_pos.getRow() == 1) {
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.KNIGHT);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.QUEEN);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.ROOK);
-                            legal_moves.add(possible_move);
-                        } else {
-                            possible_move = new ChessMove(position, end_pos, null);
-                            legal_moves.add(possible_move);
-                        }
-                    }
-                }
-
-                end_pos = new ChessPosition(startRow - 1, startCol + 1); //capture down right
-                if (!offBoard(end_pos)) {
-                    if (board.getPiece(end_pos) != null && board.getPiece(end_pos).piececolor != ChessGame.TeamColor.BLACK) {
-                        if (end_pos.getRow() == 1) {
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.BISHOP);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.KNIGHT);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.QUEEN);
-                            legal_moves.add(possible_move);
-
-                            possible_move = new ChessMove(position, end_pos, ChessPiece.PieceType.ROOK);
-                            legal_moves.add(possible_move);
-                        } else {
-                            possible_move = new ChessMove(position, end_pos, null);
-                            legal_moves.add(possible_move);
-                        }
-                    }
-                }
+                //capture down right
+                this.singleMoveLoop(startRow - 1, startCol+1, ChessGame.TeamColor.BLACK, true);
+                
             }
-
-
-            return legal_moves; //FIX piececolor
+            
+            return legal_moves; //FIX pieceColor
         }
     }
 
