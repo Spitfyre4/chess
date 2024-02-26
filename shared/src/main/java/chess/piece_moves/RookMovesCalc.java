@@ -17,18 +17,7 @@ public class RookMovesCalc  extends PieceMovesCalc{
     public boolean rookMoves(int i, int j){
         ChessPosition endPos = new ChessPosition(i, j);
         ChessMove possibleMove = new ChessMove(position, endPos, null);
-        if (offBoard(endPos)){
-            return true;
-        }
-
-        if (board.getPiece(endPos) != null){
-            if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                legalMoves.add(possibleMove);
-            }
-            return true;
-        }
-        legalMoves.add(possibleMove);
-        return false;
+        return bishopRookAdd(endPos, possibleMove, legalMoves);
     }
 
     @Override

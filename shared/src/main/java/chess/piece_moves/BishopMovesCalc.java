@@ -14,24 +14,15 @@ public class BishopMovesCalc extends PieceMovesCalc{
         super(board, position);
     }
 
+
+
     public boolean moveLoop(boolean isRight, int i, int j){
         ChessPosition endPos;
         ChessMove possibleMove;
 
         endPos = new ChessPosition(i, j);
         possibleMove = new ChessMove(position, endPos, null);
-        if (offBoard(endPos)){
-            return true;
-        }
-
-        if (board.getPiece(endPos) != null){
-            if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                legalMoves.add(possibleMove);
-            }
-            return true;
-        }
-        legalMoves.add(possibleMove);
-        return false;
+        return bishopRookAdd(endPos, possibleMove, legalMoves);
     }
 
     @Override

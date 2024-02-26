@@ -57,4 +57,19 @@ public abstract class PieceMovesCalc {
         }
     }
 
+    public boolean bishopRookAdd(ChessPosition endPos, ChessMove possibleMove, ArrayList<ChessMove> legalMoves){
+        if (offBoard(endPos)){
+            return true;
+        }
+
+        if (board.getPiece(endPos) != null){
+            if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                legalMoves.add(possibleMove);
+            }
+            return true;
+        }
+        legalMoves.add(possibleMove);
+        return false;
+    }
+
 }
