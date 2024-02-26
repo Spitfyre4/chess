@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class PieceMovesCalc {
@@ -26,6 +27,33 @@ public abstract class PieceMovesCalc {
         }
         else{
             return false;
+        }
+    }
+
+    public void kMoves(ArrayList<ChessPosition> moves, ArrayList<ChessMove> legalMoves){
+        int startRow = position.getRow();
+        int startCol = position.getColumn();
+        ChessPosition endPos;
+        ChessMove possibleMove;
+
+        for(ChessPosition pos : moves){
+            int x = pos.getRow();
+            int y = pos.getColumn();
+
+            endPos = new ChessPosition(startRow + x, startCol + y);
+            possibleMove = new ChessMove(position, endPos, null);
+
+            if (offBoard(endPos)){
+                continue;
+            }
+
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
+                }
+                continue;
+            }
+            legalMoves.add(possibleMove);
         }
     }
 
