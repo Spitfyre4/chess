@@ -14,13 +14,13 @@ public class QueenMovesCalc  extends PieceMovesCalc{
 
     @Override
     public Collection<ChessMove> legalMoveCalc() {
-        ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
-        BishopMovesCalc bishop_calc = new BishopMovesCalc(board, position);
-        RookMovesCalc rook_calc = new RookMovesCalc(board, position);
+        ArrayList<ChessMove> legalMoves = new ArrayList<ChessMove>();
+        BishopMovesCalc bishopCalc = new BishopMovesCalc(board, position);
+        RookMovesCalc rookCalc = new RookMovesCalc(board, position);
 
-        legal_moves.addAll(bishop_calc.legalMoveCalc());
-        legal_moves.addAll(rook_calc.legalMoveCalc());
+        legalMoves.addAll(bishopCalc.legalMoveCalc());
+        legalMoves.addAll(rookCalc.legalMoveCalc());
 
-        return legal_moves;
+        return legalMoves;
     }
 }

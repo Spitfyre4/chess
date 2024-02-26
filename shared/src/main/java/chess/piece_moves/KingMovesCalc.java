@@ -17,9 +17,9 @@ public class KingMovesCalc  extends PieceMovesCalc{
     public Collection<ChessMove> legalMoveCalc() {
         int startRow = position.getRow();
         int startCol = position.getColumn();
-        ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
-        ChessPosition end_pos;
-        ChessMove possible_move;
+        ArrayList<ChessMove> legalMoves = new ArrayList<ChessMove>();
+        ChessPosition endPos;
+        ChessMove possibleMove;
 
         ArrayList<ChessPosition> moves = new ArrayList<ChessPosition>();
         moves.add(new ChessPosition(1,0));
@@ -35,23 +35,23 @@ public class KingMovesCalc  extends PieceMovesCalc{
             int x = pos.getRow();
             int y = pos.getColumn();
 
-            end_pos = new ChessPosition(startRow + x, startCol + y);
-            possible_move = new ChessMove(position, end_pos, null);
+            endPos = new ChessPosition(startRow + x, startCol + y);
+            possibleMove = new ChessMove(position, endPos, null);
 
-            if (offBoard(end_pos)){
+            if (offBoard(endPos)){
                 continue;
             }
 
-            if (board.getPiece(end_pos) != null){
-                if(board.getPiece(end_pos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                    legal_moves.add(possible_move);
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
                 }
                 continue;
             }
-            legal_moves.add(possible_move);
+            legalMoves.add(possibleMove);
         }
 
-        return legal_moves;
+        return legalMoves;
     }
 
 }

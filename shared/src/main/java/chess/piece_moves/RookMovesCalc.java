@@ -16,80 +16,80 @@ public class RookMovesCalc  extends PieceMovesCalc{
     public Collection<ChessMove> legalMoveCalc() {
         int startRow = position.getRow();
         int startCol = position.getColumn();
-        ArrayList<ChessMove> legal_moves = new ArrayList<ChessMove>();
-        ChessPosition end_pos;
-        ChessMove possible_move;
+        ArrayList<ChessMove> legalMoves = new ArrayList<ChessMove>();
+        ChessPosition endPos;
+        ChessMove possibleMove;
 
 
         for (int i = startRow+1; i <= 8; i++){ //up
 
-            end_pos = new ChessPosition(i, startCol);
-            possible_move = new ChessMove(position, end_pos, null);
-            if (offBoard(end_pos)){
+            endPos = new ChessPosition(i, startCol);
+            possibleMove = new ChessMove(position, endPos, null);
+            if (offBoard(endPos)){
                 break;
             }
 
-            if (board.getPiece(end_pos) != null){
-                if(board.getPiece(end_pos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                    legal_moves.add(possible_move);
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
                 }
                 break;
             }
-            legal_moves.add(possible_move);
+            legalMoves.add(possibleMove);
         }
 
         for (int i = startRow-1; i > 0; i--){ //down
-            end_pos = new ChessPosition(i, startCol);
-            possible_move = new ChessMove(position, end_pos, null);
-            if (offBoard(end_pos)){
+            endPos = new ChessPosition(i, startCol);
+            possibleMove = new ChessMove(position, endPos, null);
+            if (offBoard(endPos)){
                 break;
             }
 
-            if (board.getPiece(end_pos) != null){
-                if(board.getPiece(end_pos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                    legal_moves.add(possible_move);
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
                 }
                 break;
             }
-            legal_moves.add(possible_move);
+            legalMoves.add(possibleMove);
         }
 
         for (int j = startCol+1; j <= 8; j++){ //right
 
-            end_pos = new ChessPosition(startRow, j);
-            possible_move = new ChessMove(position, end_pos, null);
-            if (offBoard(end_pos)){
+            endPos = new ChessPosition(startRow, j);
+            possibleMove = new ChessMove(position, endPos, null);
+            if (offBoard(endPos)){
                 break;
             }
 
-            if (board.getPiece(end_pos) != null){
-                if(board.getPiece(end_pos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                    legal_moves.add(possible_move);
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
                 }
                 break;
             }
-            legal_moves.add(possible_move);
+            legalMoves.add(possibleMove);
         }
 
         for (int j = startCol-1; j > 0; j--){ //left
 
-            end_pos = new ChessPosition(startRow, j);
-            possible_move = new ChessMove(position, end_pos, null);
-            if (offBoard(end_pos)){
+            endPos = new ChessPosition(startRow, j);
+            possibleMove = new ChessMove(position, endPos, null);
+            if (offBoard(endPos)){
                 break;
             }
 
-            if (board.getPiece(end_pos) != null){
-                if(board.getPiece(end_pos).getTeamColor() != board.getPiece(position).getTeamColor()){
-                    legal_moves.add(possible_move);
+            if (board.getPiece(endPos) != null){
+                if(board.getPiece(endPos).getTeamColor() != board.getPiece(position).getTeamColor()){
+                    legalMoves.add(possibleMove);
                 }
                 break;
             }
-            legal_moves.add(possible_move);
+            legalMoves.add(possibleMove);
         }
 
 
 
-        return legal_moves;
+        return legalMoves;
     }
 }
