@@ -80,12 +80,12 @@ public class ChessBoard {
 
         for(int j = 1; j <=8; j++){ //Pawns
             pos = new ChessPosition(2, j);
-            ChessPiece w_pawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-            this.addPiece(pos, w_pawn);
+            ChessPiece wPawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            this.addPiece(pos, wPawn);
 
             pos = new ChessPosition(7, j);
-            ChessPiece b_pawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-            this.addPiece(pos, b_pawn);
+            ChessPiece bPawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            this.addPiece(pos, bPawn);
         }
 
         //ROOKS

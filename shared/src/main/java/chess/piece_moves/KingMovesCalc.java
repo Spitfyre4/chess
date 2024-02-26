@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class KingMovesCalc  extends PieceMovesCalc{
-    private ArrayList<ChessMove> legalMoves = new ArrayList<ChessMove>();
+    private final ArrayList<ChessMove> legalMoves = new ArrayList<ChessMove>();
     public KingMovesCalc(ChessBoard board, ChessPosition position) {
         super(board, position);
     }
