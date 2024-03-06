@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.UserData;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -55,7 +56,22 @@ public class SqlUserDAO implements UserDAO{
     @Override
     public Collection<UserData> listUsers() throws DataAccessException {
         databaseManager.configureDatabase();
-        return null;
+        Collection<UserData> users = new ArrayList<>();
+
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "SELECT json FROM user";
+            try(var ps = conn.prepareStatement(statement)) {
+                var rs = ps.executeQuery();
+                while (rs.next()) {
+                    String userDataJson = rs.getString("json");
+                    UserData user = new Gson().fromJson(userDataJson, UserData.class);
+                    users.add(user);
+                }
+                return users;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     @Override
