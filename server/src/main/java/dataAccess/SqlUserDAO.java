@@ -83,19 +83,20 @@ public class SqlUserDAO implements UserDAO{
     public boolean userExists(UserData user) throws DataAccessException {
         databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
-             var statement = "SELECT username FROM user WHERE username=?";
+             var statement = "SELECT json FROM user WHERE username=?";
              try(var ps = conn.prepareStatement(statement)) {
                  ps.setString(1, user.username());
                  var rs = ps.executeQuery();
                  if (rs.next()) {
                      String userDataJson = rs.getString("json");
-                     UserData DbUser = new Gson().fromJson(userDataJson, UserData.class);
-                     if(!Objects.equals(user.password(), DbUser.password())){
+                     UserData dbUser = new Gson().fromJson(userDataJson, UserData.class);
+                     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                     if(!encoder.matches(user.password(), dbUser.password())){
                          throw new DataAccessException("Error: unauthorized", 401);
                      }
                      return true;
                  } else {
-                     throw new DataAccessException("Error: bad request", 400);
+                     return false;
                  }
              }
         } catch (SQLException e) {

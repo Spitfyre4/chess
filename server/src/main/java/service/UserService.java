@@ -22,7 +22,9 @@ public class UserService {
         return authDatabase.createAuth(user.username());
     }
     public AuthData login(UserData user) throws DataAccessException {
-        userDatabase.userExists(user);
+        if(!userDatabase.userExists(user)){
+            throw new DataAccessException("Error: unauthorized", 401);
+        }
 
         return authDatabase.createAuth(user.username());
     }
