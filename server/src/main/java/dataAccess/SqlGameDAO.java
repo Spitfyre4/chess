@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 public class SqlGameDAO implements GameDAO{
 
@@ -70,6 +71,18 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public void joinGame(String username, String playerColor, int gameId) throws DataAccessException {
         databaseManager.configureDatabase();
+        GameData updatedGame = null;
+        GameData game = getGame(gameId);
+        if(Objects.equals(playerColor, "WHITE") && game.whiteUsername() == null){
+            updatedGame = new GameData(gameId, username, game.blackUsername(), game.gameName(), game.game());
+        }
+        else if (Objects.equals(playerColor, "BLACK") && game.blackUsername() == null) {
+            updatedGame = new GameData(gameId, game.whiteUsername(), username, game.gameName(), game.game());
+        }else {
+            throw new DataAccessException("Error: already taken", 403);
+        }
+
+        createGame(updatedGame);
     }
 
     @Override
