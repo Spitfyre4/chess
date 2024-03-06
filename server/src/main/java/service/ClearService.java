@@ -18,8 +18,8 @@ public class ClearService {
 
     public void clear() throws DataAccessException {
         authDatabase.clear();
-        gameDatabase.clear();
         userDatabase.clear();
+        gameDatabase.clear();
     }
 
     public boolean isEmpty() throws DataAccessException {

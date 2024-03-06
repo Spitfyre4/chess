@@ -2,6 +2,7 @@ package dataAccess;
 
 import java.sql.*;
 import java.util.Properties;
+import static java.sql.Types.NULL;
 
 public class DatabaseManager {
     private static final String databaseName;
@@ -75,7 +76,7 @@ public class DatabaseManager {
           `password` varchar(256) NOT NULL,
           `email` varchar(256) NOT NULL,
           `json` TEXT DEFAULT NULL,
-          PRIMARY KEY (`username`),
+          PRIMARY KEY (`username`)
         )
         """,
 
@@ -84,21 +85,19 @@ public class DatabaseManager {
           `authTokens` varchar(256) NOT NULL ,
           `username` varchar(256) NOT NULL,
           `json` TEXT DEFAULT NULL,
-          PRIMARY KEY (`authTokens`),
-          FOREIGN KEY (`username`) references user(`username`)
-          
+          PRIMARY KEY (`authTokens`)
         )
         """,
 
         """
         CREATE TABLE IF NOT EXISTS  game (
-          `gameID` varchar(256) NOT NULL ,
+          `gameID` int NOT NULL ,
           `whiteUsername` varchar(256) NOT NULL,
           `blackUsername` varchar(256) NOT NULL,
           `gameName` varchar(256) NOT NULL,
-          game
-          `json_game` TEXT DEFAULT NULL,
-          PRIMARY KEY (`gameID`),
+          `jsonChessGame` TEXT DEFAULT NULL,
+          `json` TEXT DEFAULT NULL,
+          PRIMARY KEY (`gameID`)
         )
         """
     };
@@ -110,6 +109,27 @@ public class DatabaseManager {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
+    }
+
+    public void executeUpdate(String statement, Object... params) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var ps = conn.prepareStatement(statement)) {
+                for (var i = 0; i < params.length; i++) {
+                    var param = params[i];
+                    switch (param) {
+                        case String p -> ps.setString(i + 1, p);
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case null -> ps.setNull(i + 1, NULL);
+                        default -> {
+                        }
+                    }
+                }
+                ps.executeUpdate();
+
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), 500);

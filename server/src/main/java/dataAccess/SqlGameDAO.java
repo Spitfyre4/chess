@@ -7,9 +7,9 @@ import java.util.Collection;
 public class SqlGameDAO implements GameDAO{
 
     public final DatabaseManager databaseManager = new DatabaseManager();
-    public SqlGameDAO() throws DataAccessException {
-        databaseManager.configureDatabase();
-    }
+//    public SqlGameDAO() throws DataAccessException {
+//        databaseManager.configureDatabase();
+//    }
     @Override
     public void createGame(GameData game) throws DataAccessException {
 
@@ -32,6 +32,8 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void clear() throws DataAccessException {
-
+        databaseManager.configureDatabase();
+        var statement = "TRUNCATE game";
+        databaseManager.executeUpdate(statement);
     }
 }

@@ -1,18 +1,27 @@
 package dataAccess;
 
+import com.google.gson.Gson;
 import model.AuthData;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class SqlAuthDAO implements AuthDAO{
 
     public final DatabaseManager databaseManager = new DatabaseManager();
-    public SqlAuthDAO() throws DataAccessException {
-        databaseManager.configureDatabase();
-    }
+//    public SqlAuthDAO() throws DataAccessException {
+//        databaseManager.configureDatabase();
+//    }
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
-        return null;
+        String authToken = UUID.randomUUID().toString();
+        AuthData auth = new AuthData(authToken, username);
+
+        var statement = "INSERT INTO auth (authTokens, username, json) VALUES (?, ?, ?)";
+        var json = new Gson().toJson(auth);
+        databaseManager.executeUpdate(statement, auth.authToken(), auth.username(), json);
+
+        return auth;
     }
 
     @Override
@@ -32,6 +41,8 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public void clear() throws DataAccessException {
-
+        databaseManager.configureDatabase();
+        var statement = "TRUNCATE auth";
+        databaseManager.executeUpdate(statement);
     }
 }
