@@ -2,10 +2,12 @@ package dataAccess;
 
 import com.google.gson.Gson;
 import model.UserData;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -19,15 +21,18 @@ public class SqlUserDAO implements UserDAO{
     @Override
     public UserData createUser(UserData user) throws DataAccessException {
         databaseManager.configureDatabase();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hashedPassword = encoder.encode(user.password());
+
         if(userExists(user)){
             throw new DataAccessException("Error: already taken", 403);
         }
 
+        user = new UserData(user.username(), hashedPassword, user.email());
         var statement = "INSERT INTO user (username, password, email, json) VALUES (?, ?, ?, ?)";
         var json = new Gson().toJson(user);
         databaseManager.executeUpdate(statement, user.username(), user.password(), user.email(), json);
 
-        user = new UserData(user.username(), user.password(), user.email());
         return user;
     }
 
@@ -82,7 +87,16 @@ public class SqlUserDAO implements UserDAO{
              try(var ps = conn.prepareStatement(statement)) {
                  ps.setString(1, user.username());
                  var rs = ps.executeQuery();
-                 return rs.next();
+                 if (rs.next()) {
+                     String userDataJson = rs.getString("json");
+                     UserData DbUser = new Gson().fromJson(userDataJson, UserData.class);
+                     if(!Objects.equals(user.password(), DbUser.password())){
+                         throw new DataAccessException("Error: unauthorized", 401);
+                     }
+                     return true;
+                 } else {
+                     throw new DataAccessException("Error: bad request", 400);
+                 }
              }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), 500);
