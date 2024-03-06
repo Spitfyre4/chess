@@ -92,8 +92,8 @@ public class DatabaseManager {
         """
         CREATE TABLE IF NOT EXISTS  game (
           `gameID` int NOT NULL ,
-          `whiteUsername` varchar(256) NOT NULL,
-          `blackUsername` varchar(256) NOT NULL,
+          `whiteUsername` varchar(256) DEFAULT NULL,
+          `blackUsername` varchar(256) DEFAULT NULL,
           `gameName` varchar(256) NOT NULL,
           `jsonChessGame` TEXT DEFAULT NULL,
           `json` TEXT DEFAULT NULL,
