@@ -35,7 +35,21 @@ public class SqlUserDAO implements UserDAO{
     @Override
     public UserData getUser(String username) throws DataAccessException {
         databaseManager.configureDatabase();
-        return null;
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "SELECT json FROM user WHERE username=?";
+            try(var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                var rs = ps.executeQuery();
+                if (rs.next()) {
+                    String userDataJson = rs.getString("json");
+                    return new Gson().fromJson(userDataJson, UserData.class);
+                } else {
+                    throw new DataAccessException("Error: bad request", 400);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     @Override
