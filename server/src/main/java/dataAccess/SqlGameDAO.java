@@ -24,7 +24,8 @@ public class SqlGameDAO implements GameDAO{
         var statement = "INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, jsonChessGame, json) VALUES (?, ?, ?, ?, ?, ?)";
         var jsonChessGame = new Gson().toJson(game.game());
         var json = new Gson().toJson(game);
-        databaseManager.executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), jsonChessGame, json);
+        databaseManager.executeUpdate(statement, game.gameID(), game.whiteUsername(),
+                game.blackUsername(), game.gameName(), jsonChessGame, json);
     }
 
     @Override
@@ -71,8 +72,10 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public void joinGame(String username, String playerColor, int gameId) throws DataAccessException {
         databaseManager.configureDatabase();
+
         GameData updatedGame = null;
         GameData game = getGame(gameId);
+
         if(Objects.equals(playerColor, "WHITE") && game.whiteUsername() == null){
             updatedGame = new GameData(gameId, username, game.blackUsername(), game.gameName(), game.game());
         }
@@ -82,7 +85,12 @@ public class SqlGameDAO implements GameDAO{
             throw new DataAccessException("Error: already taken", 403);
         }
 
-        createGame(updatedGame);
+        var statement = "UPDATE game SET gameID=?, whiteUsername=?, blackUsername=?, gameName=?, jsonChessGame=?, json=? WHERE gameID=?";
+        var jsonChessGame = new Gson().toJson(updatedGame.game());
+        var json = new Gson().toJson(updatedGame);
+        databaseManager.executeUpdate(statement,
+                updatedGame.gameID(), updatedGame.whiteUsername(), updatedGame.blackUsername(),
+                updatedGame.gameName(), jsonChessGame, json, updatedGame.gameID());
     }
 
     @Override
