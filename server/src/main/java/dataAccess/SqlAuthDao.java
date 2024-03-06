@@ -2,7 +2,10 @@ package dataAccess;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.UserData;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -26,12 +29,38 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return null;
+        databaseManager.configureDatabase();
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "SELECT json FROM auth WHERE authToken=?";
+            try(var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                var rs = ps.executeQuery();
+                if (rs.next()) {
+                    String authDataJson = rs.getString("json");
+                    return new Gson().fromJson(authDataJson, AuthData.class);
+                } else {
+                    throw new DataAccessException("Error: bad request", 400);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        databaseManager.configureDatabase();
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "DELETE json FROM auth WHERE authToken=?";
+            try(var ps = conn.prepareStatement(statement)) {
+                var rs = ps.executeQuery();
+                if (!rs.next()) {
+                    throw new DataAccessException("Error: unauthorized", 401);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     @Override
