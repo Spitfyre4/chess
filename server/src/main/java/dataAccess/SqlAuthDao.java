@@ -39,7 +39,7 @@ public class SqlAuthDAO implements AuthDAO{
                     String authDataJson = rs.getString("json");
                     return new Gson().fromJson(authDataJson, AuthData.class);
                 } else {
-                    throw new DataAccessException("Error: bad request", 400);
+                    throw new DataAccessException("Error: unauthorized", 401);
                 }
             }
         } catch (SQLException e) {
