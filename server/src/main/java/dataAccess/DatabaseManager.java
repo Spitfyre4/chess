@@ -82,10 +82,10 @@ public class DatabaseManager {
 
         """
         CREATE TABLE IF NOT EXISTS  auth (
-          `authTokens` varchar(256) NOT NULL ,
+          `authToken` varchar(256) NOT NULL ,
           `username` varchar(256) NOT NULL,
           `json` TEXT DEFAULT NULL,
-          PRIMARY KEY (`authTokens`)
+          PRIMARY KEY (`authToken`)
         )
         """,
 

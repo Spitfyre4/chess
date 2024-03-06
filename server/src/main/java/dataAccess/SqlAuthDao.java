@@ -20,7 +20,7 @@ public class SqlAuthDAO implements AuthDAO{
         String authToken = UUID.randomUUID().toString();
         AuthData auth = new AuthData(authToken, username);
 
-        var statement = "INSERT INTO auth (authTokens, username, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO auth (authToken, username, json) VALUES (?, ?, ?)";
         var json = new Gson().toJson(auth);
         databaseManager.executeUpdate(statement, auth.authToken(), auth.username(), json);
 
@@ -51,10 +51,11 @@ public class SqlAuthDAO implements AuthDAO{
     public void deleteAuth(String authToken) throws DataAccessException {
         databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
-            var statement = "DELETE json FROM auth WHERE authToken=?";
+            var statement = "DELETE FROM auth WHERE authToken=?";
             try(var ps = conn.prepareStatement(statement)) {
-                var rs = ps.executeQuery();
-                if (!rs.next()) {
+                ps.setString(1, authToken);
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 0) {
                     throw new DataAccessException("Error: unauthorized", 401);
                 }
             }
