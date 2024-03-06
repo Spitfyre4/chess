@@ -4,7 +4,12 @@ import model.AuthData;
 
 import java.util.Collection;
 
-public class SqlAuthDao implements AuthDAO{
+public class SqlAuthDAO implements AuthDAO{
+
+    public final DatabaseManager databaseManager = new DatabaseManager();
+    public SqlAuthDAO() throws DataAccessException {
+        databaseManager.configureDatabase();
+    }
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         return null;
