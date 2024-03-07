@@ -2,10 +2,12 @@ package dataAccess;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -66,7 +68,23 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public Collection<AuthData> listAuths() throws DataAccessException {
-        return null;
+        databaseManager.configureDatabase();
+        Collection<AuthData> auths = new ArrayList<>();
+
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "SELECT json FROM auth";
+            try(var ps = conn.prepareStatement(statement)) {
+                var rs = ps.executeQuery();
+                while (rs.next()) {
+                    String authDataJson = rs.getString("json");
+                    AuthData auth = new Gson().fromJson(authDataJson, AuthData.class);
+                    auths.add(auth);
+                }
+                return auths;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     @Override
