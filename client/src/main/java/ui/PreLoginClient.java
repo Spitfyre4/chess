@@ -16,7 +16,7 @@ public class PreLoginClient {
     }
 
     public void run() throws ServerException {
-        System.out.println("\uD83D\uDC36 Welcome to Caleb's chess game");
+        System.out.println("\uD83D\uDC38 Welcome to Caleb's chess game");
         this.help();
 
         Scanner scanner = new Scanner(System.in);
@@ -41,6 +41,7 @@ public class PreLoginClient {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
                 case "register" -> register();
+                case "login" -> login();
                 case "quit" -> {
                     run = false;
                 }
@@ -62,7 +63,29 @@ public class PreLoginClient {
     }
     public void register() throws ServerException {
         var path = "/user";
-        
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+        System.out.print("Enter Email: ");
+        String email = scanner.nextLine();
+
+        UserData user = new UserData(username, password, email);
+        server.makeRequest("POST", path, user, UserData.class);
+    }
+
+    public void login() throws ServerException {
+        var path = "/session";
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+
+        UserData user = new UserData(username, password, null);
         server.makeRequest("POST", path, user, UserData.class);
     }
 }
