@@ -1,6 +1,8 @@
 package ui;
 
 
+import com.google.gson.Gson;
+import model.AuthData;
 import model.UserData;
 import server.ServerFacade;
 import server.ServerException;
@@ -10,9 +12,13 @@ import java.util.Scanner;
 public class PreLoginClient {
 
     public final ServerFacade server;
+    public final String url;
+
+    public PostLoginClient postLogin;
 
     public PreLoginClient(String url){
         server = new ServerFacade(url);
+        this.url = url;
     }
 
     public void run() throws ServerException {
@@ -73,7 +79,10 @@ public class PreLoginClient {
         String email = scanner.nextLine();
 
         UserData user = new UserData(username, password, email);
-        server.makeRequest("POST", path, user, UserData.class);
+        var auth = server.makeRequest("POST", path, user, AuthData.class);
+
+        this.postLogin = new PostLoginClient(this.url, auth);
+        this.postLogin.run();
     }
 
     public void login() throws ServerException {
@@ -86,6 +95,9 @@ public class PreLoginClient {
         String password = scanner.nextLine();
 
         UserData user = new UserData(username, password, null);
-        server.makeRequest("POST", path, user, UserData.class);
+        var auth = server.makeRequest("POST", path, user, AuthData.class);
+
+        this.postLogin = new PostLoginClient(this.url, auth);
+        this.postLogin.run();
     }
 }
