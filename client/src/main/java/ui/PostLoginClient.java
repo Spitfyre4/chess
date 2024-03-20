@@ -13,8 +13,7 @@ public class PostLoginClient {
     public final String url;
     public final AuthData auth;
     public boolean run;
-
-//    public final GameplayClient gameplay;
+    public GameplayClient gameClient;
 
     public PostLoginClient(String url, AuthData auth) {
         server = new ServerFacade(url);
@@ -63,7 +62,14 @@ public class PostLoginClient {
         return run;
     }
 
-    private void watch() {
+    private void watch() throws ServerException {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter gameID: ");
+        int gameID = Integer.parseInt(scanner.nextLine());
+
+        this.gameClient = new GameplayClient(this.url, gameID);
+        this.gameClient.run();
     }
 
     private void joinGame() throws ServerException {
@@ -77,6 +83,8 @@ public class PostLoginClient {
 
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
         server.makeRequest("PUT", this.auth.authToken(), path, req, Object.class);
+        this.gameClient = new GameplayClient(this.url, gameID, playerColor);
+        this.gameClient.run();
     }
 
     private void listGames() throws ServerException {
