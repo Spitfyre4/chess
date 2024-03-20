@@ -76,7 +76,7 @@ public class PostLoginClient {
         String playerColor = scanner.nextLine();
 
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
-        server.makeRequest("PUT", this.auth.authToken(), path, req, GameID.class);
+        server.makeRequest("PUT", this.auth.authToken(), path, req, Object.class);
     }
 
     private void listGames() throws ServerException {
