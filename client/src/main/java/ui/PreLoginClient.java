@@ -79,10 +79,11 @@ public class PreLoginClient {
         String email = scanner.nextLine();
 
         UserData user = new UserData(username, password, email);
-        var auth = server.makeRequest("POST", path, user, AuthData.class);
+        var auth = server.makeRequest("POST", null, path, user, AuthData.class);
 
         this.postLogin = new PostLoginClient(this.url, auth);
         this.postLogin.run();
+        this.help();
     }
 
     public void login() throws ServerException {
@@ -95,9 +96,10 @@ public class PreLoginClient {
         String password = scanner.nextLine();
 
         UserData user = new UserData(username, password, null);
-        var auth = server.makeRequest("POST", path, user, AuthData.class);
+        var auth = server.makeRequest("POST", null, path, user, AuthData.class);
 
         this.postLogin = new PostLoginClient(this.url, auth);
         this.postLogin.run();
+        this.help();
     }
 }

@@ -13,12 +13,13 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ServerException {
+    public <T> T makeRequest(String method, String header, String path, Object request, Class<T> responseClass) throws ServerException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+            http.setRequestProperty("authorization", header);
 
             writeBody(request, http);
             http.connect();
@@ -42,8 +43,9 @@ public class ServerFacade {
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ServerException {
         var status = http.getResponseCode();
+        String statusMessage = http.getResponseMessage();
         if (!isSuccessful(status)) {
-            throw new ServerException("failure: " + status, status);
+            throw new ServerException("failure: " + status +" -> " + statusMessage, status);
         }
     }
 

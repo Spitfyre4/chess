@@ -2,6 +2,8 @@ package ui;
 
 
 import model.AuthData;
+import model.GameID;
+import model.GamesData;
 import model.UserData;
 import server.ServerFacade;
 import server.ServerException;
@@ -13,6 +15,7 @@ public class PostLoginClient {
     public final ServerFacade server;
     public final String url;
     public final AuthData auth;
+    public boolean run;
 
 //    public final GameplayClient gameplay;
 
@@ -20,13 +23,13 @@ public class PostLoginClient {
         server = new ServerFacade(url);
         this.url = url;
         this.auth = auth;
+        this.run = true;
     }
 
     public void run() throws ServerException {
         this.help();
 
         Scanner scanner = new Scanner(System.in);
-        var run = true;
         while (run) {
             String line = scanner.nextLine();
 
@@ -41,13 +44,16 @@ public class PostLoginClient {
     }
 
     public boolean eval(String input) {
-        boolean run = true;
+
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
-//                case "register" -> register();
-//                case "login" -> login();
+                case "logout" -> logout();
+                case "create" -> createGame();
+                case "list" -> listGames();
+                case "join" -> joinGame();
+                case "watch" -> watch();
                 case "quit" -> {
                     run = false;
                 }
@@ -60,12 +66,43 @@ public class PostLoginClient {
         return run;
     }
 
+    private void watch() {
+    }
+
+    private void joinGame() {
+    }
+
+    private void listGames() throws ServerException {
+        var path = "/game";
+
+        var games = server.makeRequest("GET", this.auth.authToken(), path, null, GamesData.class);
+        System.out.println(games);
+    }
+
+    private void createGame() throws ServerException {
+        var path = "/game";
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter game name: ");
+        String name = scanner.nextLine();
+
+        var gameID = server.makeRequest("POST", this.auth.authToken(), path, name, GameID.class);
+        System.out.println("GameID: "+ gameID);
+    }
+
+    private void logout() throws ServerException {
+        var path = "/session";
+
+        server.makeRequest("DELETE", this.auth.authToken(), path, null, Object.class);
+        run = false;
+    }
+
     public void help() throws ServerException {
         System.out.println("""
                     - logout: Logout of account
-                    - create game: Make a new chess game
-                    - list games: List all chess games
-                    - join game: Join an existing chess game
+                    - create: Make a new chess game
+                    - list: List all chess games
+                    - join: Join an existing chess game
                     - watch: Watch an existing chess game
                     - quit: Quit application
                     - help: Reprint commands

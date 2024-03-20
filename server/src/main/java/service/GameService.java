@@ -29,10 +29,11 @@ public class GameService {
     }
     public int createGame(String name, String authToken) throws DataAccessException{
         authDatabase.getAuth(authToken);
-        gameDatabase.createGame(new GameData(nextId, null, null, name, new ChessGame()));
-        int output = nextId;
+        nextId = gameDatabase.getGameID();
         nextId++;
-        return output;
+        gameDatabase.createGame(new GameData(nextId, null, null, name, new ChessGame()));
+
+        return nextId;
     }
     public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException{
         gameDatabase.getGame(gameID); //checks if game exists
@@ -42,4 +43,7 @@ public class GameService {
         }
         //add as observer if null
     }
+
+
+
 }

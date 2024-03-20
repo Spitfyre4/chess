@@ -2,7 +2,6 @@ package dataAccess;
 
 import com.google.gson.Gson;
 import model.GameData;
-import model.UserData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -99,4 +98,26 @@ public class SqlGameDAO implements GameDAO{
         var statement = "TRUNCATE game";
         databaseManager.executeUpdate(statement);
     }
+
+    @Override
+    public int getGameID() throws DataAccessException {
+        databaseManager.configureDatabase();
+        try (Connection conn = databaseManager.getConnection()){
+            var statement = "SELECT MAX(gameID) AS max_gameID FROM game";
+            try(var ps = conn.prepareStatement(statement)) {
+                var rs = ps.executeQuery();
+                if (rs.next()) {
+                    int gameID = rs.getInt("max_gameID");
+                    return gameID;
+                } else {
+                    throw new DataAccessException("Error: bad request", 400);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
+
+    }
+
+
 }
