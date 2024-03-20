@@ -66,7 +66,17 @@ public class PostLoginClient {
     private void watch() {
     }
 
-    private void joinGame() {
+    private void joinGame() throws ServerException {
+        var path = "/game";
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter gameID: ");
+        int gameID = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter requested player color(WHITE/BLACK): ");
+        String playerColor = scanner.nextLine();
+
+        JoinGameReq req = new JoinGameReq(playerColor, gameID);
+        server.makeRequest("PUT", this.auth.authToken(), path, req, GameID.class);
     }
 
     private void listGames() throws ServerException {
@@ -74,6 +84,9 @@ public class PostLoginClient {
 
         var games = server.makeRequest("GET", this.auth.authToken(), path, null, GamesData.class);
         System.out.println(games);
+        System.out.println();
+        help();
+
     }
 
     private void createGame() throws ServerException {
