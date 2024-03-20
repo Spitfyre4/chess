@@ -1,10 +1,7 @@
 package ui;
 
 
-import model.AuthData;
-import model.GameID;
-import model.GamesData;
-import model.UserData;
+import model.*;
 import server.ServerFacade;
 import server.ServerException;
 
@@ -86,8 +83,11 @@ public class PostLoginClient {
         System.out.print("Enter game name: ");
         String name = scanner.nextLine();
 
-        var gameID = server.makeRequest("POST", this.auth.authToken(), path, name, GameID.class);
-        System.out.println("GameID: "+ gameID);
+        GameData game = new GameData(-1, null, null, name, null);
+        var gameID = server.makeRequest("POST", this.auth.authToken(), path, game, GameID.class);
+        System.out.println(gameID);
+        System.out.println("Type join to join game");
+        help();
     }
 
     private void logout() throws ServerException {
