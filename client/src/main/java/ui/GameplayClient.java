@@ -71,7 +71,7 @@ public class GameplayClient {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
                 //future cases to be added
-                case "quit" -> {
+                case "leave" -> {
                     run = false;
                 }
                 default -> help();
@@ -93,7 +93,15 @@ public class GameplayClient {
         ChessBoard board = new ChessBoard();
         board.resetBoard(); //just to populate the board
 
+        for (int i = 0; i <= 7; i++) {
+            char letter = (char) ('A' + i);
+            System.out.print(" \u2001\u2005\u200A  ");
+            System.out.print(letter);
+        }
+        System.out.println();
+
         for(int i = 1; i<=8; i++){
+            System.out.print(i + " ");
             for(int j = 1; j<=8; j++) {
                 ChessPiece piece = board.getPiece(new ChessPosition(i, j));
                 System.out.print("|");
@@ -112,8 +120,16 @@ public class GameplayClient {
                 }
                 System.out.print("|");
             }
+            System.out.print(" " + i);
             System.out.println();
         }
+        for (int i = 0; i <= 7; i++) {
+            char letter = (char) ('A' + i);
+            System.out.print(" \u2001\u2005\u200A  ");
+            System.out.print(letter);
+        }
+        System.out.println();
+
         System.out.println();
     }
 
@@ -121,7 +137,15 @@ public class GameplayClient {
         ChessBoard board = new ChessBoard();
         board.resetBoard(); //just to populate the board
 
+        for (int i = 0; i <= 7; i++) {
+            char letter = (char) ('H' - i);
+            System.out.print(" \u2001\u2005\u200A  ");
+            System.out.print(letter);
+        }
+        System.out.println();
+
         for(int i = 8; i>=1; i--){
+            System.out.print(i + " ");
             for(int j = 8; j>=1; j--) {
                 ChessPiece piece = board.getPiece(new ChessPosition(i, j));
                 System.out.print("|");
@@ -140,8 +164,16 @@ public class GameplayClient {
                 }
                 System.out.print("|");
             }
+            System.out.print(" " + i);
             System.out.println();
         }
+        for (int i = 0; i <= 7; i++) {
+            char letter = (char) ('H' - i);
+            System.out.print(" \u2001\u2005\u200A  ");
+            System.out.print(letter);
+        }
+        System.out.println();
+
         System.out.println();
     }
 }

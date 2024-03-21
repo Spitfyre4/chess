@@ -68,7 +68,7 @@ public class PostLoginClient {
     private void watch() throws ServerException {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter gameID: ");
+        System.out.print("Enter game number: ");
         int gameID = Integer.parseInt(scanner.nextLine());
 
         this.gameClient = new GameplayClient(this.url, gameID);
@@ -79,11 +79,14 @@ public class PostLoginClient {
     private void joinGame() throws ServerException {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter gameID: ");
-        int gameID = Integer.parseInt(scanner.nextLine());
+        System.out.print("Enter game number: ");
+        int gameNum = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter requested player color(WHITE/BLACK): ");
         String playerColor = scanner.nextLine();
 
+        GamesData games = server.listGames(auth.authToken());
+
+        int gameID = games.getGame(gameNum-1).gameID();
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
         server.joinGame(req, auth.authToken());
 
@@ -95,7 +98,7 @@ public class PostLoginClient {
     private void listGames() throws ServerException {
 
         GamesData games = server.listGames(this.auth.authToken());
-
+        int index = 1;
         for(GameData game : games.games()) {
             String whiteUsername = "N/A";
             String blackUsername = "N/A";
@@ -105,12 +108,11 @@ public class PostLoginClient {
             if(game.blackUsername()!=null){
                 blackUsername = game.blackUsername();
             }
-            System.out.println(game.gameName() + ":");
-            System.out.println(" -GameID: " +game.gameID());
-            System.out.println(" -White player: "+whiteUsername);
-            System.out.println(" -Black player: "+blackUsername);
-            System.out.println();
+            System.out.print(index);
+            System.out.println(") "+ game.gameName() +"->" + " White player: "+whiteUsername +", Black player: "+blackUsername);
+            index++;
         }
+        System.out.println();
         help();
 
     }

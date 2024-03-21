@@ -15,7 +15,8 @@ public class UserService {
         this.authDatabase = authDatabase;
     }
     public AuthData register(UserData user) throws DataAccessException {
-        if(user.username() == null || user.password() == null || user.email() == null){
+        if(user.username() == null || user.password() == null || user.email() == null ||
+                user.username().isEmpty() || user.password().isEmpty() || user.email().isEmpty()){
             throw new DataAccessException("Error: Bad request", 400);
         }
         user = userDatabase.createUser(user);
