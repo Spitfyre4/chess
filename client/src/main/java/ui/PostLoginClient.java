@@ -53,6 +53,8 @@ public class PostLoginClient {
                 case "watch" -> watch();
                 case "quit" -> {
                     run = false;
+                    System.out.println("Goodbye!");
+                    System.exit(0);
                 }
                 default -> help();
             }

@@ -78,11 +78,11 @@ public class ServerFacade {
         return this.makeRequest("POST", null, path, user, AuthData.class);
     }
 
+
     public void joinGame(JoinGameReq req, String authToken) throws ServerException {
         var path = "/game";
         this.makeRequest("PUT", authToken, path, req, Object.class);
     }
-
     public GamesData listGames(String authToken) throws ServerException {
         var path = "/game";
         return this.makeRequest("GET", authToken, path, null, GamesData.class);
