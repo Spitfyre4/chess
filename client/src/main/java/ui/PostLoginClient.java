@@ -75,7 +75,6 @@ public class PostLoginClient {
     }
 
     private void joinGame() throws ServerException {
-        var path = "/game";
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter gameID: ");
@@ -84,16 +83,17 @@ public class PostLoginClient {
         String playerColor = scanner.nextLine();
 
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
-        server.makeRequest("PUT", this.auth.authToken(), path, req, Object.class);
+        server.joinGame(req, auth.authToken());
+
         this.gameClient = new GameplayClient(this.url, gameID, playerColor);
         this.gameClient.run();
         this.help();
     }
 
     private void listGames() throws ServerException {
-        var path = "/game";
 
-        var games = server.makeRequest("GET", this.auth.authToken(), path, null, GamesData.class);
+        GamesData games = server.listGames(this.auth.authToken());
+
         for(GameData game : games.games()) {
             String whiteUsername = "N/A";
             String blackUsername = "N/A";
@@ -114,14 +114,14 @@ public class PostLoginClient {
     }
 
     private void createGame() throws ServerException {
-        var path = "/game";
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter game name: ");
         String name = scanner.nextLine();
 
         GameData game = new GameData(-1, null, null, name, null);
-        var gameID = server.makeRequest("POST", this.auth.authToken(), path, game, GameID.class);
+        GameID gameID = server.createGame(game, this.auth.authToken());
+
         System.out.println();
         System.out.println("Your GameID is: " + gameID.gameID());
         System.out.println("Type join to join game");
@@ -130,9 +130,8 @@ public class PostLoginClient {
     }
 
     private void logout() throws ServerException {
-        var path = "/session";
+        server.logout(this.auth.authToken());
 
-        server.makeRequest("DELETE", this.auth.authToken(), path, null, Object.class);
         run = false;
     }
 

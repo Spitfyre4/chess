@@ -69,7 +69,6 @@ public class PreLoginClient {
                     """);
     }
     public void register() throws ServerException {
-        var path = "/user";
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter Username: ");
@@ -80,7 +79,7 @@ public class PreLoginClient {
         String email = scanner.nextLine();
 
         UserData user = new UserData(username, password, email);
-        var auth = server.makeRequest("POST", null, path, user, AuthData.class);
+        var auth = server.register(user);
 
         this.postLogin = new PostLoginClient(this.url, auth);
         this.postLogin.run();
@@ -88,7 +87,6 @@ public class PreLoginClient {
     }
 
     public void login() throws ServerException {
-        var path = "/session";
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter Username: ");
@@ -97,7 +95,7 @@ public class PreLoginClient {
         String password = scanner.nextLine();
 
         UserData user = new UserData(username, password, null);
-        var auth = server.makeRequest("POST", null, path, user, AuthData.class);
+        var auth = server.login(user);
 
         this.postLogin = new PostLoginClient(this.url, auth);
         this.postLogin.run();

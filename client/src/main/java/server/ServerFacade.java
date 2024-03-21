@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import model.*;
 
 import java.io.*;
 import java.net.*;
@@ -66,4 +67,34 @@ public class ServerFacade {
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
+
+    public AuthData register(UserData user) throws ServerException {
+        var path = "/user";
+        return this.makeRequest("POST", null, path, user, AuthData.class);
+    }
+
+    public AuthData login(UserData user) throws ServerException {
+        var path = "/session";
+        return this.makeRequest("POST", null, path, user, AuthData.class);
+    }
+
+    public void joinGame(JoinGameReq req, String authToken) throws ServerException {
+        var path = "/game";
+        this.makeRequest("PUT", authToken, path, req, Object.class);
+    }
+
+    public GamesData listGames(String authToken) throws ServerException {
+        var path = "/game";
+        return this.makeRequest("GET", authToken, path, null, GamesData.class);
+    }
+    public GameID createGame(GameData game, String authToken) throws ServerException {
+        var path = "/game";
+        return this.makeRequest("POST", authToken, path, game, GameID.class);
+    }
+    public void logout(String authToken) throws ServerException {
+        var path = "/session";
+        this.makeRequest("DELETE", authToken, path, null, Object.class);
+    }
+
+
 }
