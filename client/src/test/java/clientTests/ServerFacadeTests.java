@@ -102,33 +102,79 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void listTest() {
-        assertTrue(true);
+    public void listTest() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+        sFacade.createGame(game, authToken);
+
+        assertNotNull(sFacade.listGames(authToken));
     }
 
     @Test
-    public void listFail() {
-        assertTrue(true);
+    public void listFail() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+        sFacade.createGame(game, authToken);
+
+        assertThrows(ServerException.class, () -> {
+            sFacade.listGames("badAuth");
+        });
     }
 
     @Test
-    public void createTest() {
-        assertTrue(true);
+    public void createTest() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+
+        assertNotNull(sFacade.createGame(game, authToken));
     }
 
     @Test
-    public void createFail() {
-        assertTrue(true);
+    public void createFail() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+
+        assertThrows(ServerException.class, () -> {
+            sFacade.createGame(game, "bad auth");
+        });
     }
 
     @Test
-    public void logoutTest() {
-        assertTrue(true);
+    public void logoutTest() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+
+        sFacade.logout(authToken);
+
+        assertThrows(ServerException.class, () -> {
+            sFacade.createGame(game, authToken);
+        });
     }
 
     @Test
-    public void logoutFail() {
-        assertTrue(true);
+    public void logoutFail() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        assertThrows(ServerException.class, () -> {
+            sFacade.logout("bad auth");
+        });
     }
 
     @Test

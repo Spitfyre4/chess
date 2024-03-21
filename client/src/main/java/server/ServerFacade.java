@@ -63,10 +63,10 @@ public class ServerFacade {
         return response;
     }
 
-
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
+
 
     public AuthData register(UserData user) throws ServerException {
         var path = "/user";
@@ -77,7 +77,6 @@ public class ServerFacade {
         var path = "/session";
         return this.makeRequest("POST", null, path, user, AuthData.class);
     }
-
 
     public void joinGame(JoinGameReq req, String authToken) throws ServerException {
         var path = "/game";
