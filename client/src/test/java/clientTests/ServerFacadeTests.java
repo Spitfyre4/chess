@@ -2,6 +2,8 @@ package clientTests;
 
 import dataAccess.DataAccessException;
 import dataAccess.SqlGameDAO;
+import model.GameData;
+import model.JoinGameReq;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -53,23 +55,50 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void loginTest() {
-        assertTrue(true);
+    public void loginTest() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        sFacade.register(user);
+        var auth = sFacade.login(user);
+        assertNotNull(auth.authToken());
     }
 
     @Test
     public void loginFail() {
-        assertTrue(true);
+        UserData user = new UserData("username", "password", "email");
+        assertThrows(ServerException.class, () -> {
+            sFacade.login(user);
+        });
+
     }
 
     @Test
-    public void joinTest() {
-        assertTrue(true);
+    public void joinTest() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        GameData game = new GameData(-1, null, null, "game", null);
+        var gameID = sFacade.createGame(game, authToken);
+
+        JoinGameReq req = new JoinGameReq("WHITE", gameID.gameID());
+
+
+        assertDoesNotThrow(() -> sFacade.joinGame(req, authToken));
+
     }
 
     @Test
-    public void joinFail() {
-        assertTrue(true);
+    public void joinFail() throws ServerException {
+        UserData user = new UserData("username", "password", "email");
+        var auth = sFacade.register(user);
+        String authToken = auth.authToken();
+
+        JoinGameReq req = new JoinGameReq("WHITE", 1);
+
+        assertThrows(ServerException.class, () -> {
+            sFacade.joinGame(req, authToken);
+        });
+
     }
 
     @Test
