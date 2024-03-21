@@ -23,6 +23,7 @@ public class PostLoginClient {
     }
 
     public void run() throws ServerException {
+        System.out.println();
         this.help();
 
         Scanner scanner = new Scanner(System.in);
@@ -70,6 +71,7 @@ public class PostLoginClient {
 
         this.gameClient = new GameplayClient(this.url, gameID);
         this.gameClient.run();
+        this.help();
     }
 
     private void joinGame() throws ServerException {
@@ -85,14 +87,28 @@ public class PostLoginClient {
         server.makeRequest("PUT", this.auth.authToken(), path, req, Object.class);
         this.gameClient = new GameplayClient(this.url, gameID, playerColor);
         this.gameClient.run();
+        this.help();
     }
 
     private void listGames() throws ServerException {
         var path = "/game";
 
         var games = server.makeRequest("GET", this.auth.authToken(), path, null, GamesData.class);
-        System.out.println(games);
-        System.out.println();
+        for(GameData game : games.games()) {
+            String whiteUsername = "N/A";
+            String blackUsername = "N/A";
+            if(game.whiteUsername()!=null){
+                whiteUsername = game.whiteUsername();
+            }
+            if(game.blackUsername()!=null){
+                blackUsername = game.blackUsername();
+            }
+            System.out.println(game.gameName() + ":");
+            System.out.println(" -GameID: " +game.gameID());
+            System.out.println(" -White player: "+whiteUsername);
+            System.out.println(" -Black player: "+blackUsername);
+            System.out.println();
+        }
         help();
 
     }
@@ -106,8 +122,10 @@ public class PostLoginClient {
 
         GameData game = new GameData(-1, null, null, name, null);
         var gameID = server.makeRequest("POST", this.auth.authToken(), path, game, GameID.class);
-        System.out.println(gameID);
+        System.out.println();
+        System.out.println("Your GameID is: " + gameID.gameID());
         System.out.println("Type join to join game");
+        System.out.println();
         help();
     }
 

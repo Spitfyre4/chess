@@ -38,10 +38,12 @@ public class GameplayClient {
     }
 
     public void run() throws ServerException {
+        System.out.println();
         printWhiteBoard(this.gameID);
         printBlackBoard(this.gameID);
 
         Scanner scanner = new Scanner(System.in);
+        System.out.println();
         if(playerColor!= null) {
             this.help();
         }

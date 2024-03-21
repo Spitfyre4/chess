@@ -36,6 +36,7 @@ public class PreLoginClient {
                 var msg = e.toString();
                 System.out.print(msg);
             }
+            System.out.println();
         }
         System.out.println();
     }
