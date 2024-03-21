@@ -96,5 +96,10 @@ public class ServerFacade {
         this.makeRequest("DELETE", authToken, path, null, Object.class);
     }
 
+    public void clear() throws ServerException {
+        var path = "/db";
+        this.makeRequest("DELETE", null, path, null, Object.class);
+    }
+
 
 }
