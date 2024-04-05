@@ -1,13 +1,11 @@
 package clientTests;
 
-import dataAccess.DataAccessException;
-import dataAccess.SqlGameDAO;
 import model.GameData;
 import model.JoinGameReq;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
-import server.ServerException;
+import exception.ServerException;
 import server.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.*;

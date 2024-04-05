@@ -4,7 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import server.ServerException;
+import exception.ServerException;
 import server.ServerFacade;
 
 import java.util.Scanner;

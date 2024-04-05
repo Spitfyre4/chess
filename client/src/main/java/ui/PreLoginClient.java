@@ -1,11 +1,9 @@
 package ui;
 
 
-import com.google.gson.Gson;
-import model.AuthData;
 import model.UserData;
 import server.ServerFacade;
-import server.ServerException;
+import exception.ServerException;
 
 import java.util.Scanner;
 

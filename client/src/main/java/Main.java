@@ -1,4 +1,4 @@
-import server.ServerException;
+import exception.ServerException;
 import ui.PreLoginClient;
 
 public class Main {

@@ -3,7 +3,7 @@ package ui;
 
 import model.*;
 import server.ServerFacade;
-import server.ServerException;
+import exception.ServerException;
 
 import java.util.Scanner;
 
