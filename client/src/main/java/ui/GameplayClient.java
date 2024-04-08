@@ -5,6 +5,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.ServerException;
+import model.AuthData;
 import server.ServerFacade;
 import websocket.WebSocketFacade;
 
@@ -18,62 +19,63 @@ public class GameplayClient {
     public final int gameID;
     public final String playerColor;
     public boolean run;
+    public AuthData auth;
 
     public WebSocketFacade ws;
 
-    public GameplayClient(String url, int gameID, WebSocketFacade ws){
+    public GameplayClient(String url, int gameID, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
         this.run = false;
-        this.ws = ws;
+        this.ws = new WebSocketFacade(url);
+        this.auth = auth;
     }
 
-    public GameplayClient(String url, int gameID, String playerColor, WebSocketFacade ws){
+    public GameplayClient(String url, int gameID, String playerColor, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
         this.gameID = gameID;
         this.playerColor = playerColor;
         this.run = true;
-        this.ws = ws;
+        this.ws = new WebSocketFacade(url);
+        this.auth = auth;
     }
 
     public void run() throws ServerException {
         System.out.println();
         printWhiteBoard(this.gameID);
         printBlackBoard(this.gameID);
+        boolean observer = false;
 
         Scanner scanner = new Scanner(System.in);
         System.out.println();
         if(playerColor!= null) {
             this.help();
-            while (run) {
-                String line = scanner.nextLine();
-                try {
-                    run = this.eval(line);
-                } catch (Throwable e) {
-                    var msg = e.toString();
-                    System.out.print(msg);
-                }
-                System.out.println();
-            }
-            System.out.println();
         }
         else{
             System.out.println("You joined as an observer");
-            while (run) {
-                String line = scanner.nextLine();
-                try {
+            this.ObserverHelp();
+            observer = true;
+        }
+
+        while (run) {
+            String line = scanner.nextLine();
+            try {
+                if(observer){
                     run = this.ObserveEval(line);
-                } catch (Throwable e) {
-                    var msg = e.toString();
-                    System.out.print(msg);
                 }
-                System.out.println();
+                else{
+                    run = this.eval(line);
+                }
+            } catch (Throwable e) {
+                var msg = e.toString();
+                System.out.print(msg);
             }
             System.out.println();
         }
+        System.out.println();
 
     }
 

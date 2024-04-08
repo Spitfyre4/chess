@@ -15,14 +15,12 @@ public class PostLoginClient {
     public final AuthData auth;
     public boolean run;
     public GameplayClient gameClient;
-    public WebSocketFacade ws;
 
     public PostLoginClient(String url, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
         this.auth = auth;
         this.run = true;
-        this.ws = new WebSocketFacade(url);
     }
 
     public void run() throws ServerException {
@@ -74,7 +72,7 @@ public class PostLoginClient {
         System.out.print("Enter game number: ");
         int gameID = Integer.parseInt(scanner.nextLine());
 
-        this.gameClient = new GameplayClient(this.url, gameID, this.ws);
+        this.gameClient = new GameplayClient(this.url, gameID, this.auth);
         this.gameClient.run();
         this.help();
     }
@@ -93,7 +91,7 @@ public class PostLoginClient {
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
         server.joinGame(req, auth.authToken());
 
-        this.gameClient = new GameplayClient(this.url, gameID, playerColor, this.ws);
+        this.gameClient = new GameplayClient(this.url, gameID, playerColor, this.auth);
         this.gameClient.run();
         this.help();
     }

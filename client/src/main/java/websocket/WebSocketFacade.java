@@ -2,6 +2,7 @@ package websocket;
 
 import com.google.gson.Gson;
 import exception.*;
+import webSocketMessages.userCommands.UserGameCommand;
 
 
 import javax.websocket.*;
@@ -34,8 +35,59 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    //Endpoint requires this method, but you don't have to do anything
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
+
+    private void resign(String authString) throws ServerException {
+        try {
+            var req = new UserGameCommand(authString);
+            req.setCommandType(UserGameCommand.CommandType.RESIGN);
+            this.session.getBasicRemote().sendText(new Gson().toJson(req));
+        } catch (IOException ex) {
+            throw new ServerException(ex.getMessage(), 500);
+        }
+    }
+
+    private void leave(String authString) throws ServerException {
+        try {
+            var req = new UserGameCommand(authString);
+            req.setCommandType(UserGameCommand.CommandType.LEAVE);
+            this.session.getBasicRemote().sendText(new Gson().toJson(req));
+        } catch (IOException ex) {
+            throw new ServerException(ex.getMessage(), 500);
+        }
+    }
+
+    private void makeMove(String authString) throws ServerException {
+        try {
+            var req = new UserGameCommand(authString);
+            req.setCommandType(UserGameCommand.CommandType.MAKE_MOVE);
+            this.session.getBasicRemote().sendText(new Gson().toJson(req));
+        } catch (IOException ex) {
+            throw new ServerException(ex.getMessage(), 500);
+        }
+    }
+
+    private void joinObserver(String authString) throws ServerException {
+        try {
+            var req = new UserGameCommand(authString);
+            req.setCommandType(UserGameCommand.CommandType.JOIN_OBSERVER);
+            this.session.getBasicRemote().sendText(new Gson().toJson(req));
+        } catch (IOException ex) {
+            throw new ServerException(ex.getMessage(), 500);
+        }
+    }
+
+    private void joinPlayer(String authString) throws ServerException {
+        try {
+            var req = new UserGameCommand(authString);
+            req.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
+            this.session.getBasicRemote().sendText(new Gson().toJson(req));
+        } catch (IOException ex) {
+            throw new ServerException(ex.getMessage(), 500);
+        }
+    }
+
+
 }
