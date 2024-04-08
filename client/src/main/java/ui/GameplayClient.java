@@ -33,12 +33,13 @@ public class GameplayClient {
         this.ws = ws;
     }
 
-    public GameplayClient(String url, int gameID, String playerColor){
+    public GameplayClient(String url, int gameID, String playerColor, WebSocketFacade ws){
         server = new ServerFacade(url);
         this.url = url;
         this.gameID = gameID;
         this.playerColor = playerColor;
         this.run = true;
+        this.ws = ws;
     }
 
     public void run() throws ServerException {

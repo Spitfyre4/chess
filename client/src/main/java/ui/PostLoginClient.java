@@ -93,7 +93,7 @@ public class PostLoginClient {
         JoinGameReq req = new JoinGameReq(playerColor, gameID);
         server.joinGame(req, auth.authToken());
 
-        this.gameClient = new GameplayClient(this.url, gameID, playerColor);
+        this.gameClient = new GameplayClient(this.url, gameID, playerColor, this.ws);
         this.gameClient.run();
         this.help();
     }
