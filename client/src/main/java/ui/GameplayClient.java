@@ -13,9 +13,6 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class GameplayClient {
-
-
-
     public final ServerFacade server;
     public final String url;
     public final int gameID;
@@ -24,12 +21,12 @@ public class GameplayClient {
 
     public WebSocketFacade ws;
 
-    public GameplayClient(String url, int gameID, WebSocketFacade ws) throws ServerException {
+    public GameplayClient(String url, int gameID, WebSocketFacade ws){
         server = new ServerFacade(url);
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
-        this.run = true;
+        this.run = false;
         this.ws = ws;
     }
 
@@ -51,22 +48,33 @@ public class GameplayClient {
         System.out.println();
         if(playerColor!= null) {
             this.help();
-        }
-        else{
-            System.out.println("You Joined as an observer");
-        }
-        while (run) {
-            String line = scanner.nextLine();
-
-            try {
-                run = this.eval(line);
-            } catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
+            while (run) {
+                String line = scanner.nextLine();
+                try {
+                    run = this.eval(line);
+                } catch (Throwable e) {
+                    var msg = e.toString();
+                    System.out.print(msg);
+                }
+                System.out.println();
             }
             System.out.println();
         }
-        System.out.println();
+        else{
+            System.out.println("You joined as an observer");
+            while (run) {
+                String line = scanner.nextLine();
+                try {
+                    run = this.ObserveEval(line);
+                } catch (Throwable e) {
+                    var msg = e.toString();
+                    System.out.print(msg);
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
+
     }
 
     public boolean eval(String input) {
@@ -75,9 +83,17 @@ public class GameplayClient {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
-                //future cases to be added
+                case "redraw" -> redraw();
+                case "move" -> movePiece();
+                case "highlight" -> highlight();
+                case "resign" -> resign();
                 case "leave" -> {
                     run = false;
+                }
+                case "quit" -> {
+                    run = false;
+                    System.out.println("Goodbye!");
+                    System.exit(0);
                 }
                 default -> help();
             }
@@ -88,9 +104,58 @@ public class GameplayClient {
         return run;
     }
 
+    private void redraw() {
+    }
+
+    private void movePiece() {
+    }
+
+    private void highlight() {
+    }
+
+    private void resign() {
+    }
+
     public void help() throws ServerException {
         System.out.println("""
-                    Put all future commands here
+                    - redraw: Redraw the chess board
+                    - move: Allows you to make a move
+                    - highlight: Highlight all legal moves
+                    - resign: Forfeit the game and the game
+                    - leave: Leave game
+                    - quit: Quit application
+                    - help: Reprint commands
+                    """);
+    }
+
+    public boolean ObserveEval(String input) {
+
+        try {
+            var tokens = input.toLowerCase().split(" ");
+            var cmd = (tokens.length > 0) ? tokens[0] : "help";
+            switch (cmd) {
+                case "leave" -> {
+                    run = false;
+                }
+                case "quit" -> {
+                    run = false;
+                    System.out.println("Goodbye!");
+                    System.exit(0);
+                }
+                default -> ObserverHelp();
+            }
+            ;
+        } catch (ServerException e) {
+            System.out.println(e.getMessage());
+        }
+        return run;
+    }
+
+    public void ObserverHelp() throws ServerException {
+        System.out.println("""
+                    - leave: Leave game
+                    - quit: Quit application
+                    - help: Reprint commands
                     """);
     }
 
