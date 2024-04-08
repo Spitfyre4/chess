@@ -13,19 +13,21 @@ public class ConnectionManager {
 
     public void add(String username, String authToken, GameID gameID, Session session) {
         var connection = new Connection(username, authToken, gameID, session);
-        connections.put(username, connection);
+        connections.put(authToken, connection);
     }
 
-    public void remove(String username) {
-        connections.remove(username);
+    public void remove(String authToken) {
+        connections.remove(authToken);
     }
 
     public void broadcast(String excludeAuth, String message, GameID gameID) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.username.equals(excludeAuth)) {
-                    c.send(message);
+                if (!c.authToken.equals(excludeAuth)) {
+                    if(c.gameID.equals(gameID)){
+                        c.send(message);
+                    }
                 }
             } else {
                 removeList.add(c);
@@ -34,7 +36,7 @@ public class ConnectionManager {
 
         // Clean up any connections that were left open.
         for (var c : removeList) {
-            connections.remove(c.username);
+            connections.remove(c.authToken);
         }
     }
 }

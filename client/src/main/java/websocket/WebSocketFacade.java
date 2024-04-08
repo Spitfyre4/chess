@@ -14,7 +14,7 @@ public class WebSocketFacade extends Endpoint {
     Session session;
 
 
-    public WebSocketFacade(String url) throws ResponseException {
+    public WebSocketFacade(String url) throws ServerException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
@@ -30,7 +30,7 @@ public class WebSocketFacade extends Endpoint {
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
-            throw new ResponseException(500, ex.getMessage());
+            throw new ServerException(ex.getMessage(), 500);
         }
     }
 

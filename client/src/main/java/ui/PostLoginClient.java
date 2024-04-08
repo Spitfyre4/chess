@@ -4,6 +4,7 @@ package ui;
 import model.*;
 import server.ServerFacade;
 import exception.ServerException;
+import websocket.WebSocketFacade;
 
 import java.util.Scanner;
 
@@ -14,12 +15,14 @@ public class PostLoginClient {
     public final AuthData auth;
     public boolean run;
     public GameplayClient gameClient;
+    public WebSocketFacade ws;
 
-    public PostLoginClient(String url, AuthData auth) {
+    public PostLoginClient(String url, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
         this.auth = auth;
         this.run = true;
+        this.ws = new WebSocketFacade(url);
     }
 
     public void run() throws ServerException {
@@ -71,7 +74,7 @@ public class PostLoginClient {
         System.out.print("Enter game number: ");
         int gameID = Integer.parseInt(scanner.nextLine());
 
-        this.gameClient = new GameplayClient(this.url, gameID);
+        this.gameClient = new GameplayClient(this.url, gameID, this.ws);
         this.gameClient.run();
         this.help();
     }

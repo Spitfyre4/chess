@@ -6,6 +6,7 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.ServerException;
 import server.ServerFacade;
+import websocket.WebSocketFacade;
 
 import java.util.Scanner;
 
@@ -21,12 +22,15 @@ public class GameplayClient {
     public final String playerColor;
     public boolean run;
 
-    public GameplayClient(String url, int gameID){
+    public WebSocketFacade ws;
+
+    public GameplayClient(String url, int gameID, WebSocketFacade ws) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
         this.run = true;
+        this.ws = ws;
     }
 
     public GameplayClient(String url, int gameID, String playerColor){
