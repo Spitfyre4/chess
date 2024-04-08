@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.*;
 import model.ErrorMessage;
+import server.websocket.WebSocketHandler;
 import service.*;
 import spark.*;
 
@@ -23,6 +24,10 @@ public class Server {
         ClearService myClearService = new ClearService(userDatabase, authDatabase, gameDatabase);
         UserService myUserService = new UserService(userDatabase, authDatabase);
         GameService myGameService = new GameService(userDatabase, authDatabase, gameDatabase);
+        WebSocketHandler webSocketHandler = new WebSocketHandler();
+
+
+        Spark.webSocket("/connect", webSocketHandler);
 
 
         Spark.delete("/db", (req, res) ->
