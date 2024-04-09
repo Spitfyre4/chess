@@ -44,4 +44,9 @@ public class ConnectionManager {
             connections.remove(c.authToken);
         }
     }
+
+    public void sendMessage(String auth, ServerMessage message) throws IOException {
+        var c = connections.get(auth);
+        c.send(message);
+    }
 }

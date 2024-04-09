@@ -1,7 +1,11 @@
 package server.websocket;
 
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import exception.ServerException;
+import model.GameData;
+import model.GameID;
+import model.GamesData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -13,6 +17,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @WebSocket
 public class WebSocketHandler {
@@ -26,7 +31,7 @@ public class WebSocketHandler {
 
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException {
         System.out.println("in handler");
         UserGameCommand cmd = new Gson().fromJson(message, UserGameCommand.class);
         switch (cmd.getCommandType()) {
@@ -58,18 +63,32 @@ public class WebSocketHandler {
     }
 
 
-    private void joinObserver(JoinObserverCommand cmd, Session session) throws IOException {
+    private void joinObserver(JoinObserverCommand cmd, Session session) throws IOException, DataAccessException {
         connections.add(cmd.getAuthString(), cmd.gameID, session);
         NotificationMessage message =
                 new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "joinObs");
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+
+        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+        GameData game = games.getGame(new GameID(cmd.gameID));
+        assert game != null;
+        LoadGameMessage gMessage =
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
+        connections.sendMessage(cmd.getAuthString(), gMessage);
     }
 
-    private void joinPlayer(JoinPlayerCommand cmd, Session session) throws IOException {
+    private void joinPlayer(JoinPlayerCommand cmd, Session session) throws IOException, DataAccessException {
         System.out.println("in joinPlayer");
         connections.add(cmd.getAuthString(), cmd.gameID, session);
         NotificationMessage message =
                 new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "joinPlayer");
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+
+        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+        GameData game = games.getGame(new GameID(cmd.gameID));
+        assert game != null;
+        LoadGameMessage gMessage =
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
+        connections.sendMessage(cmd.getAuthString(), gMessage);
     }
 }

@@ -9,4 +9,13 @@ public record GamesData(Collection<GameData> games) {
         }
         return games.stream().skip(index).findFirst().orElse(null);
     }
+
+    public GameData getGame(GameID gameID) {
+        for (GameData gameData : games) {
+            if (gameData.gameID() == gameID.gameID()) {
+                return gameData;
+            }
+        }
+        return null; // Or throw an exception if not found
+    }
 }

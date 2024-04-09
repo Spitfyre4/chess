@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 public class WebSocketFacade extends Endpoint {
 
     Session session;
+    private String playerColor; //have it print board assigned to color
 
     public WebSocketFacade(String url) throws ServerException {
         try {
@@ -24,6 +25,7 @@ public class WebSocketFacade extends Endpoint {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
             System.out.println("Websocket connected to server");
+            this.playerColor = null;
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
@@ -85,6 +87,7 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void joinPlayer(String authString, int gameID, String playerColor) throws ServerException {
+        this.playerColor = playerColor;
         try {
             var req = new JoinPlayerCommand(authString, gameID, playerColor);
             System.out.println("Sending joinPlayer Websocket from client to server");
