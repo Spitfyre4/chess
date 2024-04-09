@@ -23,7 +23,7 @@ public class WebSocketHandler {
     }
 
     private void resign(String authString) {
-        connections.broadcast();
+
     }
 
     private void leave(String authString) {

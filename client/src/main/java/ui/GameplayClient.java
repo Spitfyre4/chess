@@ -1,9 +1,6 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import exception.ServerException;
 import model.AuthData;
 import server.ServerFacade;
@@ -32,7 +29,7 @@ public class GameplayClient {
         this.run = false;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
-        this.ws.joinObserver(auth.authToken());
+        this.ws.joinObserver(auth.authToken(), gameID);
     }
 
     //Player joins
@@ -44,7 +41,7 @@ public class GameplayClient {
         this.run = true;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
-        this.ws.joinPlayer(auth.authToken());
+        this.ws.joinPlayer(auth.authToken(), gameID, playerColor);
     }
 
     public void run() throws ServerException {
@@ -95,7 +92,7 @@ public class GameplayClient {
                 case "resign" -> resign();
                 case "leave" -> {
                     run = false;
-                    this.ws.leave(auth.authToken());
+                    this.ws.leave(auth.authToken(), gameID);
                 }
                 case "quit" -> {
                     run = false;
@@ -115,14 +112,17 @@ public class GameplayClient {
     }
 
     private void movePiece() throws ServerException {
-        this.ws.makeMove(auth.authToken());
+        ChessPosition startPos = new ChessPosition(1,1);
+        ChessPosition endPos = new ChessPosition(1,1);
+        ChessMove move = new ChessMove(startPos, endPos, null);
+        this.ws.makeMove(auth.authToken(), gameID, playerColor, move);
     }
 
     private void highlight() throws ServerException {
     }
 
     private void resign() throws ServerException {
-        this.ws.resign(auth.authToken());
+        this.ws.resign(auth.authToken(), gameID);
     }
 
     public void help() throws ServerException {
@@ -144,7 +144,7 @@ public class GameplayClient {
             switch (cmd) {
                 case "leave" -> {
                     run = false;
-                    this.ws.leave(auth.authToken());
+                    this.ws.leave(auth.authToken(), gameID);
                 }
                 case "quit" -> {
                     run = false;
