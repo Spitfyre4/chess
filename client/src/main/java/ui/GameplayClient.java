@@ -23,6 +23,7 @@ public class GameplayClient {
 
     public WebSocketFacade ws;
 
+    //Observer joins
     public GameplayClient(String url, int gameID, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
@@ -31,8 +32,10 @@ public class GameplayClient {
         this.run = false;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
+        this.ws.joinObserver(auth.authToken());
     }
 
+    //Player joins
     public GameplayClient(String url, int gameID, String playerColor, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
         this.url = url;
@@ -41,6 +44,7 @@ public class GameplayClient {
         this.run = true;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
+        this.ws.joinPlayer(auth.authToken());
     }
 
     public void run() throws ServerException {
@@ -91,6 +95,7 @@ public class GameplayClient {
                 case "resign" -> resign();
                 case "leave" -> {
                     run = false;
+                    this.ws.leave(auth.authToken());
                 }
                 case "quit" -> {
                     run = false;
@@ -106,16 +111,18 @@ public class GameplayClient {
         return run;
     }
 
-    private void redraw() {
+    private void redraw() throws ServerException {
     }
 
-    private void movePiece() {
+    private void movePiece() throws ServerException {
+        this.ws.makeMove(auth.authToken());
     }
 
-    private void highlight() {
+    private void highlight() throws ServerException {
     }
 
-    private void resign() {
+    private void resign() throws ServerException {
+        this.ws.resign(auth.authToken());
     }
 
     public void help() throws ServerException {
@@ -131,13 +138,13 @@ public class GameplayClient {
     }
 
     public boolean ObserveEval(String input) {
-
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
                 case "leave" -> {
                     run = false;
+                    this.ws.leave(auth.authToken());
                 }
                 case "quit" -> {
                     run = false;

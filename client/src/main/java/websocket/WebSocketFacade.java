@@ -39,7 +39,7 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    private void resign(String authString) throws ServerException {
+    public void resign(String authString) throws ServerException {
         try {
             var req = new UserGameCommand(authString);
             req.setCommandType(UserGameCommand.CommandType.RESIGN);
@@ -49,7 +49,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void leave(String authString) throws ServerException {
+    public void leave(String authString) throws ServerException {
         try {
             var req = new UserGameCommand(authString);
             req.setCommandType(UserGameCommand.CommandType.LEAVE);
@@ -59,7 +59,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void makeMove(String authString) throws ServerException {
+    public void makeMove(String authString) throws ServerException {
         try {
             var req = new UserGameCommand(authString);
             req.setCommandType(UserGameCommand.CommandType.MAKE_MOVE);
@@ -69,7 +69,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void joinObserver(String authString) throws ServerException {
+    public void joinObserver(String authString) throws ServerException {
         try {
             var req = new UserGameCommand(authString);
             req.setCommandType(UserGameCommand.CommandType.JOIN_OBSERVER);
@@ -79,7 +79,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void joinPlayer(String authString) throws ServerException {
+    public void joinPlayer(String authString) throws ServerException {
         try {
             var req = new UserGameCommand(authString);
             req.setCommandType(UserGameCommand.CommandType.JOIN_PLAYER);
