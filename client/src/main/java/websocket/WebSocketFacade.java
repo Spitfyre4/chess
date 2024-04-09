@@ -30,9 +30,9 @@ public class WebSocketFacade extends Endpoint {
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
-                        case NOTIFICATION -> System.out.println("Notification");
-                        case ERROR -> System.out.println("Notification");
-                        case LOAD_GAME -> System.out.println("Notification");
+                        case NOTIFICATION -> System.out.println("Notification"); //somehow have username stored? then store the whole message to print?
+                        case ERROR -> System.out.println("Error");
+                        case LOAD_GAME -> System.out.println("Load game");
                     }
                 }
             });
@@ -44,6 +44,7 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
+
 
     public void resign(String authString) throws ServerException {
         try {
