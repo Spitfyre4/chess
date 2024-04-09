@@ -52,6 +52,10 @@ public class WebSocketFacade extends Endpoint {
         gameplay.printBoard(playerColor);
     }
 
+    public void reprintBoard(){
+        gameplay.printBoard(playerColor);
+    }
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
@@ -96,16 +100,12 @@ public class WebSocketFacade extends Endpoint {
 
     public void joinPlayer(String authString, int gameID, String playerColor, String username) throws ServerException {
         this.playerColor = playerColor;
-
         try {
             var req = new JoinPlayerCommand(authString, gameID, playerColor, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);
         }
-
-
-
     }
 
 

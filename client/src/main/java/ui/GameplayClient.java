@@ -4,6 +4,7 @@ import chess.*;
 import exception.ServerException;
 import model.AuthData;
 import server.ServerFacade;
+import webSocketMessages.serverMessages.LoadGameMessage;
 import websocket.WebSocketFacade;
 
 import java.util.Scanner;
@@ -107,6 +108,7 @@ public class GameplayClient {
     }
 
     private void redraw() throws ServerException {
+        this.ws.reprintBoard();
     }
 
     private void movePiece() throws ServerException {
