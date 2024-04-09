@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import webSocketMessages.serverMessages.NotificationMessage;
 
 import java.util.Objects;
 
@@ -14,8 +15,7 @@ public class GameplayHandler {
 
     private ChessGame game;
 
-    public GameplayHandler(ChessGame game){
-        this.game = game;
+    public GameplayHandler(){
     }
 
     public void updateGame(ChessGame game){
@@ -120,5 +120,9 @@ public class GameplayHandler {
         System.out.println();
 
         System.out.println();
+    }
+
+    public void send(NotificationMessage notificationMessage) {
+        System.out.println(notificationMessage.getMessage());
     }
 }
