@@ -3,10 +3,9 @@ package webSocketMessages.userCommands;
 import model.GameID;
 
 public class JoinPlayerCommand extends UserGameCommand{
-    private final String username;
+    public final String username;
     public int gameID;
-
-    String playerColor;
+    public String playerColor;
 
     public JoinPlayerCommand(String authToken, int gameID, String playerColor, String username) {
         super(authToken);

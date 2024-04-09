@@ -44,15 +44,17 @@ public class WebSocketHandler {
     }
 
     private void resign(ResignCommand cmd) throws IOException {
+        String phrase = cmd.username + " resigned";
         NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "resign");
+                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
     }
 
     private void leave(LeaveCommand cmd) throws IOException {
         connections.remove(cmd.getAuthString());
+        String phrase = cmd.username + " left the game";
         NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "leave");
+                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
     }
 
@@ -65,8 +67,9 @@ public class WebSocketHandler {
 
     private void joinObserver(JoinObserverCommand cmd, Session session) throws IOException, DataAccessException {
         connections.add(cmd.getAuthString(), cmd.gameID, session);
+        String phrase = cmd.username + " joined as an observer";
         NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "join obs");
+                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
         GameData game = games.getGame(new GameID(cmd.gameID));
@@ -79,8 +82,9 @@ public class WebSocketHandler {
     private void joinPlayer(JoinPlayerCommand cmd, Session session) throws IOException, DataAccessException {
 //        System.out.println("in joinPlayer");
         connections.add(cmd.getAuthString(), cmd.gameID, session);
+        String phrase = cmd.username + " joined as " + cmd.playerColor + " player";
         NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "joinPlayer");
+                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
