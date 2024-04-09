@@ -35,6 +35,6 @@ public class WebSocketHandler {
     }
 
     private void joinPlayer(String authString) {
-        connections.add();
+//        connections.add();
     }
 }

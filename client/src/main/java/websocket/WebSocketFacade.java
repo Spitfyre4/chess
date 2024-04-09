@@ -2,6 +2,7 @@ package websocket;
 
 import com.google.gson.Gson;
 import exception.*;
+import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.UserGameCommand;
 
 
@@ -27,7 +28,12 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    switch (serverMessage.getServerMessageType()) {
+                        case NOTIFICATION -> System.out.println("Notification");
+                        case ERROR -> System.out.println("Notification");
+                        case LOAD_GAME -> System.out.println("Notification");
+                    }
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
