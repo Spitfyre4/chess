@@ -28,14 +28,12 @@ public class WebSocketFacade extends Endpoint {
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
-            System.out.println("Websocket connected to server");
             this.gameplay = new GameplayHandler();
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    System.out.println("In Facade onMessage");
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> gameplay.send(new Gson().fromJson(message, NotificationMessage.class));
@@ -50,8 +48,6 @@ public class WebSocketFacade extends Endpoint {
     }
 
     private void loadGame(LoadGameMessage loadGameMessage) {
-        System.out.println("Got a " + loadGameMessage.getServerMessageType());
-        System.out.println("loading Game: " + loadGameMessage.game);
         gameplay.updateGame(loadGameMessage.game);
         gameplay.printBoard(playerColor);
     }
@@ -61,18 +57,18 @@ public class WebSocketFacade extends Endpoint {
     }
 
 
-    public void resign(String authString, int gameID) throws ServerException {
+    public void resign(String authString, int gameID, String username) throws ServerException {
         try {
-            var req = new ResignCommand(authString, gameID);
+            var req = new ResignCommand(authString, gameID, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);
         }
     }
 
-    public void leave(String authString, int gameID) throws ServerException {
+    public void leave(String authString, int gameID, String username) throws ServerException {
         try {
-            var req = new LeaveCommand(authString, gameID);
+            var req = new LeaveCommand(authString, gameID, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);
@@ -88,9 +84,9 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void joinObserver(String authString, int gameID) throws ServerException {
+    public void joinObserver(String authString, int gameID, String username) throws ServerException {
         try {
-            var req = new JoinObserverCommand(authString, gameID);
+            var req = new JoinObserverCommand(authString, gameID, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);
@@ -98,12 +94,11 @@ public class WebSocketFacade extends Endpoint {
 
     }
 
-    public void joinPlayer(String authString, int gameID, String playerColor) throws ServerException {
+    public void joinPlayer(String authString, int gameID, String playerColor, String username) throws ServerException {
         this.playerColor = playerColor;
 
         try {
-            var req = new JoinPlayerCommand(authString, gameID, playerColor);
-            System.out.println("Sending joinPlayer Websocket from client to server");
+            var req = new JoinPlayerCommand(authString, gameID, playerColor, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);

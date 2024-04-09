@@ -32,7 +32,7 @@ public class WebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException {
-        System.out.println("in handler");
+//        System.out.println("in wsHandler");
         UserGameCommand cmd = new Gson().fromJson(message, UserGameCommand.class);
         switch (cmd.getCommandType()) {
             case JOIN_PLAYER -> joinPlayer(new Gson().fromJson(message, JoinPlayerCommand.class), session);
@@ -66,9 +66,8 @@ public class WebSocketHandler {
     private void joinObserver(JoinObserverCommand cmd, Session session) throws IOException, DataAccessException {
         connections.add(cmd.getAuthString(), cmd.gameID, session);
         NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "joinObs");
+                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "join obs");
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
-
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
         GameData game = games.getGame(new GameID(cmd.gameID));
         assert game != null;
@@ -78,16 +77,14 @@ public class WebSocketHandler {
     }
 
     private void joinPlayer(JoinPlayerCommand cmd, Session session) throws IOException, DataAccessException {
-        System.out.println("in joinPlayer");
+//        System.out.println("in joinPlayer");
         connections.add(cmd.getAuthString(), cmd.gameID, session);
         NotificationMessage message =
                 new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "joinPlayer");
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
-        System.out.println("Retrieving game: " + cmd.gameID);
         GameData game = games.getGame(new GameID(cmd.gameID));
-        System.out.println("got game: " + game.gameID());
         LoadGameMessage gMessage =
                 new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
         connections.sendMessage(cmd.getAuthString(), gMessage);

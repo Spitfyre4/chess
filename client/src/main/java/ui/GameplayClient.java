@@ -29,7 +29,7 @@ public class GameplayClient {
         this.run = false;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
-        this.ws.joinObserver(auth.authToken(), gameID);
+        this.ws.joinObserver(auth.authToken(), gameID, auth.username());
     }
 
     //Player joins
@@ -41,7 +41,7 @@ public class GameplayClient {
         this.run = true;
         this.ws = new WebSocketFacade(url);
         this.auth = auth;
-        this.ws.joinPlayer(auth.authToken(), gameID, playerColor);
+        this.ws.joinPlayer(auth.authToken(), gameID, playerColor, auth.username());
     }
 
     public void run() throws ServerException {
@@ -90,7 +90,7 @@ public class GameplayClient {
                 case "resign" -> resign();
                 case "leave" -> {
                     run = false;
-                    this.ws.leave(auth.authToken(), gameID);
+                    this.ws.leave(auth.authToken(), gameID, auth.username());
                 }
                 case "quit" -> {
                     run = false;
@@ -120,7 +120,7 @@ public class GameplayClient {
     }
 
     private void resign() throws ServerException {
-        this.ws.resign(auth.authToken(), gameID);
+        this.ws.resign(auth.authToken(), gameID, auth.username());
     }
 
     public void help() throws ServerException {
@@ -142,7 +142,7 @@ public class GameplayClient {
             switch (cmd) {
                 case "leave" -> {
                     run = false;
-                    this.ws.leave(auth.authToken(), gameID);
+                    this.ws.leave(auth.authToken(), gameID, auth.username());
                 }
                 case "quit" -> {
                     run = false;
