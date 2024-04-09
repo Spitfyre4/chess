@@ -6,7 +6,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
 
 public class Connection {
-    public String username;
     public Session session;
     public String authToken;
     public int gameID;

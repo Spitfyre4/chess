@@ -1,9 +1,6 @@
 package server.websocket;
 
-import exception.ServerException;
-import model.GameID;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
