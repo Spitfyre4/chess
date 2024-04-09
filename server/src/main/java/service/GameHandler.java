@@ -35,7 +35,5 @@ public class GameHandler {
         myGameService.joinGame(authToken, gameReq.playerColor(), gameReq.gameID());
         res.status(200);
         return "{}";
-
-
     }
 }

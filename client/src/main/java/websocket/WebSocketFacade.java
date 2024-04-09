@@ -3,7 +3,6 @@ package websocket;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.*;
-import model.GameID;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
 
@@ -17,7 +16,6 @@ public class WebSocketFacade extends Endpoint {
 
     Session session;
 
-
     public WebSocketFacade(String url) throws ServerException {
         try {
             url = url.replace("http", "ws");
@@ -25,15 +23,16 @@ public class WebSocketFacade extends Endpoint {
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
+            System.out.println("Websocket connected to server");
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    System.out.println("back in facade");
+                    System.out.println("In Facade onMessage");
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
-                        case NOTIFICATION -> System.out.println("Notification"); //somehow have username stored? then store the whole message to print?
+                        case NOTIFICATION -> System.out.println("Notification");
                         case ERROR -> System.out.println("Error");
                         case LOAD_GAME -> System.out.println("Load game");
                     }
@@ -88,6 +87,7 @@ public class WebSocketFacade extends Endpoint {
     public void joinPlayer(String authString, int gameID, String playerColor) throws ServerException {
         try {
             var req = new JoinPlayerCommand(authString, gameID, playerColor);
+            System.out.println("Sending joinPlayer Websocket from client to server");
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);

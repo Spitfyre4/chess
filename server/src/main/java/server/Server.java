@@ -24,7 +24,7 @@ public class Server {
         ClearService myClearService = new ClearService(userDatabase, authDatabase, gameDatabase);
         UserService myUserService = new UserService(userDatabase, authDatabase);
         GameService myGameService = new GameService(userDatabase, authDatabase, gameDatabase);
-        WebSocketHandler webSocketHandler = new WebSocketHandler();
+        WebSocketHandler webSocketHandler = new WebSocketHandler(myGameService);
 
 
         Spark.webSocket("/connect", webSocketHandler);
@@ -50,6 +50,7 @@ public class Server {
 
         Spark.put("/game", (req, res) ->
                 (new GameHandler(myGameService)).joinGame(req, res));
+
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
