@@ -9,10 +9,9 @@ public class Connection {
     public String username;
     public Session session;
     public String authToken;
-    public GameID gameID;
+    public int gameID;
 
-    public Connection(String username, String authToken, GameID gameID, Session session) {
-        this.username = username;
+    public Connection(String authToken, int gameID, Session session) {
         this.session = session;
         this.authToken = authToken;
         this.gameID = gameID;

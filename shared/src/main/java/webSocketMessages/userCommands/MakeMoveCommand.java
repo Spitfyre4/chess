@@ -4,7 +4,7 @@ import chess.ChessMove;
 import model.GameID;
 
 public class MakeMoveCommand extends UserGameCommand{
-    int gameID;
+    public int gameID;
     ChessMove move;
     String playerColor;
     public MakeMoveCommand(String authToken, int gameID, String playerColor, ChessMove move) {

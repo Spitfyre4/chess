@@ -3,7 +3,7 @@ package webSocketMessages.userCommands;
 import model.GameID;
 
 public class JoinPlayerCommand extends UserGameCommand{
-    int gameID;
+    public int gameID;
 
     String playerColor;
 

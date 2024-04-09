@@ -1,5 +1,6 @@
 package server.websocket;
 
+import exception.ServerException;
 import model.GameID;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.*;
@@ -11,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
-    public void add(String username, String authToken, GameID gameID, Session session) {
-        var connection = new Connection(username, authToken, gameID, session);
+    public void add(String authToken, int gameID, Session session) {
+        var connection = new Connection(authToken, gameID, session);
         connections.put(authToken, connection);
     }
 
@@ -20,12 +21,12 @@ public class ConnectionManager {
         connections.remove(authToken);
     }
 
-    public void broadcast(String excludeAuth, String message, GameID gameID) throws IOException {
+    public void broadcast(String excludeAuth, String message, int gameID) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (!c.authToken.equals(excludeAuth)) {
-                    if(c.gameID.equals(gameID)){
+                    if(c.gameID == gameID){
                         c.send(message);
                     }
                 }

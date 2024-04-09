@@ -3,7 +3,7 @@ package webSocketMessages.userCommands;
 import model.GameID;
 
 public class JoinObserverCommand extends UserGameCommand{
-    int gameID;
+    public int gameID;
     public JoinObserverCommand(String authToken, int gameID) {
         super(authToken);
         this.gameID = gameID;
