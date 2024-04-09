@@ -46,16 +46,15 @@ public class GameplayClient {
 
     public void run() throws ServerException {
         System.out.println();
-        printWhiteBoard(this.gameID);
-        printBlackBoard(this.gameID);
+//        printWhiteBoard(this.gameID);
+//        printBlackBoard(this.gameID);
         boolean observer = false;
 
         Scanner scanner = new Scanner(System.in);
         System.out.println();
-        if(playerColor!= null) {
+        if (playerColor != null) {
             this.help();
-        }
-        else{
+        } else {
             System.out.println("You joined as an observer");
             this.ObserverHelp();
             observer = true;
@@ -64,10 +63,9 @@ public class GameplayClient {
         while (run) {
             String line = scanner.nextLine();
             try {
-                if(observer){
+                if (observer) {
                     run = this.ObserveEval(line);
-                }
-                else{
+                } else {
                     run = this.eval(line);
                 }
             } catch (Throwable e) {
@@ -101,7 +99,7 @@ public class GameplayClient {
                 }
                 default -> help();
             }
-            ;
+
         } catch (ServerException e) {
             System.out.println(e.getMessage());
         }
@@ -112,8 +110,8 @@ public class GameplayClient {
     }
 
     private void movePiece() throws ServerException {
-        ChessPosition startPos = new ChessPosition(1,1);
-        ChessPosition endPos = new ChessPosition(1,1);
+        ChessPosition startPos = new ChessPosition(1, 1);
+        ChessPosition endPos = new ChessPosition(1, 1);
         ChessMove move = new ChessMove(startPos, endPos, null);
         this.ws.makeMove(auth.authToken(), gameID, playerColor, move);
     }
@@ -127,14 +125,14 @@ public class GameplayClient {
 
     public void help() throws ServerException {
         System.out.println("""
-                    - redraw: Redraw the chess board
-                    - move: Allows you to make a move
-                    - highlight: Highlight all legal moves
-                    - resign: Forfeit the game and the game
-                    - leave: Leave game
-                    - quit: Quit application
-                    - help: Reprint commands
-                    """);
+                - redraw: Redraw the chess board
+                - move: Allows you to make a move
+                - highlight: Highlight all legal moves
+                - resign: Forfeit the game and the game
+                - leave: Leave game
+                - quit: Quit application
+                - help: Reprint commands
+                """);
     }
 
     public boolean ObserveEval(String input) {
@@ -153,7 +151,7 @@ public class GameplayClient {
                 }
                 default -> ObserverHelp();
             }
-            ;
+
         } catch (ServerException e) {
             System.out.println(e.getMessage());
         }
@@ -162,97 +160,98 @@ public class GameplayClient {
 
     public void ObserverHelp() throws ServerException {
         System.out.println("""
-                    - leave: Leave game
-                    - quit: Quit application
-                    - help: Reprint commands
-                    """);
-    }
-
-    public void printWhiteBoard(int gameID){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard(); //just to populate the board
-
-        for (int i = 0; i <= 7; i++) {
-            char letter = (char) ('A' + i);
-            System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
-        }
-        System.out.println();
-
-        for(int i = 1; i<=8; i++){
-            System.out.print(i + " ");
-            for(int j = 1; j<=8; j++) {
-                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-                System.out.print("|");
-                if (piece != null) {
-                    switch (piece.getPieceType()) {
-                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
-                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
-                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
-                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
-                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
-                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
-                    }
-                }
-                else{
-                    System.out.print(" \u2001\u2005\u200A ");
-                }
-                System.out.print("|");
-            }
-            System.out.print(" " + i);
-            System.out.println();
-        }
-        for (int i = 0; i <= 7; i++) {
-            char letter = (char) ('A' + i);
-            System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
-        }
-        System.out.println();
-
-        System.out.println();
-    }
-
-    public void printBlackBoard(int gameID){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard(); //just to populate the board
-
-        for (int i = 0; i <= 7; i++) {
-            char letter = (char) ('H' - i);
-            System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
-        }
-        System.out.println();
-
-        for(int i = 8; i>=1; i--){
-            System.out.print(i + " ");
-            for(int j = 8; j>=1; j--) {
-                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-                System.out.print("|");
-                if (piece != null) {
-                    switch (piece.getPieceType()) {
-                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
-                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
-                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
-                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
-                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
-                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
-                    }
-                }
-                else{
-                    System.out.print(" \u2001\u2005\u200A ");
-                }
-                System.out.print("|");
-            }
-            System.out.print(" " + i);
-            System.out.println();
-        }
-        for (int i = 0; i <= 7; i++) {
-            char letter = (char) ('H' - i);
-            System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
-        }
-        System.out.println();
-
-        System.out.println();
+                - leave: Leave game
+                - quit: Quit application
+                - help: Reprint commands
+                """);
     }
 }
+
+//    public void printWhiteBoard(int gameID){
+//        ChessBoard board = new ChessBoard();
+//        board.resetBoard(); //just to populate the board
+//
+//        for (int i = 0; i <= 7; i++) {
+//            char letter = (char) ('A' + i);
+//            System.out.print(" \u2001\u2005\u200A  ");
+//            System.out.print(letter);
+//        }
+//        System.out.println();
+//
+//        for(int i = 1; i<=8; i++){
+//            System.out.print(i + " ");
+//            for(int j = 1; j<=8; j++) {
+//                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+//                System.out.print("|");
+//                if (piece != null) {
+//                    switch (piece.getPieceType()) {
+//                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
+//                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
+//                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
+//                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
+//                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
+//                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
+//                    }
+//                }
+//                else{
+//                    System.out.print(" \u2001\u2005\u200A ");
+//                }
+//                System.out.print("|");
+//            }
+//            System.out.print(" " + i);
+//            System.out.println();
+//        }
+//        for (int i = 0; i <= 7; i++) {
+//            char letter = (char) ('A' + i);
+//            System.out.print(" \u2001\u2005\u200A  ");
+//            System.out.print(letter);
+//        }
+//        System.out.println();
+//
+//        System.out.println();
+//    }
+
+//    public void printBlackBoard(int gameID){
+//        ChessBoard board = new ChessBoard();
+//        board.resetBoard(); //just to populate the board
+//
+//        for (int i = 0; i <= 7; i++) {
+//            char letter = (char) ('H' - i);
+//            System.out.print(" \u2001\u2005\u200A  ");
+//            System.out.print(letter);
+//        }
+//        System.out.println();
+//
+//        for(int i = 8; i>=1; i--){
+//            System.out.print(i + " ");
+//            for(int j = 8; j>=1; j--) {
+//                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+//                System.out.print("|");
+//                if (piece != null) {
+//                    switch (piece.getPieceType()) {
+//                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
+//                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
+//                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
+//                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
+//                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
+//                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
+//                    }
+//                }
+//                else{
+//                    System.out.print(" \u2001\u2005\u200A ");
+//                }
+//                System.out.print("|");
+//            }
+//            System.out.print(" " + i);
+//            System.out.println();
+//        }
+//        for (int i = 0; i <= 7; i++) {
+//            char letter = (char) ('H' - i);
+//            System.out.print(" \u2001\u2005\u200A  ");
+//            System.out.print(letter);
+//        }
+//        System.out.println();
+//
+//        System.out.println();
+//    }
+//}
