@@ -50,6 +50,8 @@ public class WebSocketFacade extends Endpoint {
     }
 
     private void loadGame(LoadGameMessage loadGameMessage) {
+        System.out.println("Got a " + loadGameMessage.getServerMessageType());
+        System.out.println("loading Game: " + loadGameMessage.game);
         gameplay.updateGame(loadGameMessage.game);
         gameplay.printBoard(playerColor);
     }

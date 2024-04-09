@@ -32,6 +32,7 @@ public class GameplayHandler {
     }
 
     public void printWhite(){
+        System.out.println("printing whiteBoard");
         ChessBoard board = game.getBoard();
 
         for (int i = 0; i <= 7; i++) {

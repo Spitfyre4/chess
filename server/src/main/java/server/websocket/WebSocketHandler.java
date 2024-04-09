@@ -85,8 +85,9 @@ public class WebSocketHandler {
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+        System.out.println("Retrieving game: " + cmd.gameID);
         GameData game = games.getGame(new GameID(cmd.gameID));
-        assert game != null;
+        System.out.println("got game: " + game.gameID());
         LoadGameMessage gMessage =
                 new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
         connections.sendMessage(cmd.getAuthString(), gMessage);
