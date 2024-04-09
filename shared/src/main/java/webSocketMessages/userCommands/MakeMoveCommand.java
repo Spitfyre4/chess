@@ -5,8 +5,8 @@ import model.GameID;
 
 public class MakeMoveCommand extends UserGameCommand{
     public int gameID;
-    ChessMove move;
-    String playerColor;
+    public ChessMove move;
+    public String playerColor;
     public MakeMoveCommand(String authToken, int gameID, String playerColor, ChessMove move) {
         super(authToken);
         this.gameID = gameID;

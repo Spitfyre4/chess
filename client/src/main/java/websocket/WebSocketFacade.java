@@ -21,14 +21,14 @@ public class WebSocketFacade extends Endpoint {
     private GameplayHandler gameplay;
     String playerColor = null;
 
-    public WebSocketFacade(String url) throws ServerException {
+    public WebSocketFacade(String url, GameplayHandler gameplay) throws ServerException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/connect");
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
-            this.gameplay = new GameplayHandler();
+            this.gameplay = gameplay;
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {

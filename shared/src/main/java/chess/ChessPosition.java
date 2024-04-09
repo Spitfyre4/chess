@@ -31,6 +31,12 @@ public class ChessPosition {
         return "(" + row + ", " + col + ')';
     }
 
+    public String toMove(){
+        char columnChar = (char) (getColumn() + 'a' - 1);
+        String rowString = Integer.toString(getRow());
+        return columnChar + rowString;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

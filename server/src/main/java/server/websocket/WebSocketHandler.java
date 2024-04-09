@@ -61,6 +61,7 @@ public class WebSocketHandler {
     private void makeMove(MakeMoveCommand cmd) throws IOException {
         LoadGameMessage message =
                 new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, null);
+        System.out.println("got the move: " + cmd.move);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
     }
 

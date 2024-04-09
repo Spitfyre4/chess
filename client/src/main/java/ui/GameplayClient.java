@@ -5,9 +5,12 @@ import exception.ServerException;
 import model.AuthData;
 import server.ServerFacade;
 import webSocketMessages.serverMessages.LoadGameMessage;
+import websocket.GameplayHandler;
 import websocket.WebSocketFacade;
 
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import static ui.EscapeSequences.*;
 
@@ -16,19 +19,20 @@ public class GameplayClient {
     public final String url;
     public final int gameID;
     public final String playerColor;
+    public final GameplayHandler gameplay;
     public boolean run;
     public AuthData auth;
-
     public WebSocketFacade ws;
 
     //Observer joins
     public GameplayClient(String url, int gameID, AuthData auth) throws ServerException {
         server = new ServerFacade(url);
+        this.gameplay = new GameplayHandler();
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
         this.run = false;
-        this.ws = new WebSocketFacade(url);
+        this.ws = new WebSocketFacade(url, this.gameplay);
         this.auth = auth;
         this.ws.joinObserver(auth.authToken(), gameID, auth.username());
     }
@@ -39,8 +43,9 @@ public class GameplayClient {
         this.url = url;
         this.gameID = gameID;
         this.playerColor = playerColor;
+        this.gameplay = new GameplayHandler();
         this.run = true;
-        this.ws = new WebSocketFacade(url);
+        this.ws = new WebSocketFacade(url, this.gameplay);
         this.auth = auth;
         this.ws.joinPlayer(auth.authToken(), gameID, playerColor, auth.username());
     }
@@ -112,10 +117,66 @@ public class GameplayClient {
     }
 
     private void movePiece() throws ServerException {
-        ChessPosition startPos = new ChessPosition(1, 1);
-        ChessPosition endPos = new ChessPosition(1, 1);
-        ChessMove move = new ChessMove(startPos, endPos, null);
-        this.ws.makeMove(auth.authToken(), gameID, playerColor, move);
+        Scanner scanner = new Scanner(System.in);
+        boolean startPiece = false;
+        boolean endPosBool = false;
+        ChessPosition startPos = null;
+        ChessPosition endPos = null;
+        ChessMove moveFinal = null;
+
+        ChessPiece piece = null;
+
+        while (!startPiece) {
+            startPos = null;
+            System.out.println("What is the column of the piece you would like to move?");
+            String startColLetter = scanner.nextLine();
+            if (startColLetter.length() != 1 && !startColLetter.matches("[a-zA-Z]+")) {
+                System.out.println("Enter a valid letter");
+                continue;
+            }
+            int startCol = startColLetter.charAt(0) - 'a' + 1;
+
+            System.out.println("What is the row of the piece you would like to move?");
+            int startRow = scanner.nextInt();
+
+            startPos = new ChessPosition(startRow, startCol);
+
+            piece = gameplay.game.getBoard().getPiece(startPos);
+
+            if (piece != null && Objects.equals(piece.getTeamColor().toString(), playerColor)) {
+                startPiece = true;
+            } else {
+                System.out.println("There is no " + playerColor + " piece there");
+            }
+        }
+
+        while(!endPosBool){
+            endPos = null;
+            ArrayList<ChessMove> moves = (ArrayList<ChessMove>)piece.pieceMoves(gameplay.game.getBoard(), startPos);
+            int index = 1;
+            System.out.println("Where would you like to move your " + piece.getPieceType() + "?");
+            System.out.println("Your possible moves are:");
+            for (ChessMove move : moves){
+                System.out.print(index + ") " + move.getEndPosition().toMove());
+                if (move.getPromotionPiece() != null){
+                    System.out.println(" promoting to a " + move.getPromotionPiece().toString());
+                }
+                else{
+                    System.out.println();
+                }
+            }
+
+            int moveIndex = scanner.nextInt();
+            if(moveIndex > moves.size() || moveIndex < 1){
+                System.out.println("Invalid input");
+                continue;
+            }
+
+            moveFinal = moves.get(moveIndex-1);
+            endPosBool = true;
+        }
+
+        this.ws.makeMove(this.auth.authToken(), this.gameID, this.playerColor, moveFinal);
     }
 
     private void highlight() throws ServerException {

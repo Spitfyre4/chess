@@ -13,7 +13,7 @@ import static ui.EscapeSequences.BLACK_KING;
 
 public class GameplayHandler {
 
-    private ChessGame game;
+    public ChessGame game;
 
     public GameplayHandler(){
     }
