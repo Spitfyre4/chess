@@ -4,7 +4,6 @@ import chess.*;
 import exception.ServerException;
 import model.AuthData;
 import server.ServerFacade;
-import webSocketMessages.serverMessages.LoadGameMessage;
 import websocket.GameplayHandler;
 import websocket.WebSocketFacade;
 
@@ -12,15 +11,12 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import static ui.EscapeSequences.*;
-
 public class GameplayClient {
     public final ServerFacade server;
     public final String url;
     public final int gameID;
     public final String playerColor;
     public final GameplayHandler gameplay;
-    public boolean run;
     public AuthData auth;
     public WebSocketFacade ws;
 
@@ -31,7 +27,6 @@ public class GameplayClient {
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
-        this.run = true;
         this.ws = new WebSocketFacade(url, this.gameplay);
         this.auth = auth;
         this.ws.joinObserver(auth.authToken(), gameID, auth.username());
@@ -44,7 +39,6 @@ public class GameplayClient {
         this.gameID = gameID;
         this.playerColor = playerColor;
         this.gameplay = new GameplayHandler();
-        this.run = true;
         this.ws = new WebSocketFacade(url, this.gameplay);
         this.auth = auth;
         this.ws.joinPlayer(auth.authToken(), gameID, playerColor, auth.username());
@@ -66,14 +60,14 @@ public class GameplayClient {
             observer = true;
         }
 
-        while (run) {
+        while (gameplay.isGameRunning()) {
 
             String line = scanner.nextLine();
             try {
                 if (observer) {
-                    run = this.ObserveEval(line);
+                    this.ObserveEval(line);
                 } else {
-                    run = this.eval(line);
+                    this.eval(line);
                 }
             } catch (Throwable e) {
                 var msg = e.toString();
@@ -85,7 +79,7 @@ public class GameplayClient {
 
     }
 
-    public boolean eval(String input) {
+    public void eval(String input) {
 
         try {
             var tokens = input.toLowerCase().split(" ");
@@ -96,11 +90,11 @@ public class GameplayClient {
                 case "highlight" -> highlight();
                 case "resign" -> resign();
                 case "leave" -> {
-                    run = false;
+                    gameplay.endGame();
                     this.ws.leave(auth.authToken(), gameID, auth.username());
                 }
                 case "quit" -> {
-                    run = false;
+                    gameplay.endGame();
                     System.out.println("Goodbye!");
                     System.exit(0);
                 }
@@ -110,7 +104,6 @@ public class GameplayClient {
         } catch (ServerException e) {
             System.out.println(e.getMessage());
         }
-        return run;
     }
 
     private void redraw() throws ServerException {
@@ -229,17 +222,17 @@ public class GameplayClient {
                 """);
     }
 
-    public boolean ObserveEval(String input) {
+    public void ObserveEval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             switch (cmd) {
                 case "leave" -> {
-                    run = false;
+                    gameplay.endGame();
                     this.ws.leave(auth.authToken(), gameID, auth.username());
                 }
                 case "quit" -> {
-                    run = false;
+                    gameplay.endGame();
                     System.out.println("Goodbye!");
                     System.exit(0);
                 }
@@ -249,7 +242,6 @@ public class GameplayClient {
         } catch (ServerException e) {
             System.out.println(e.getMessage());
         }
-        return run;
     }
 
     public void ObserverHelp() throws ServerException {

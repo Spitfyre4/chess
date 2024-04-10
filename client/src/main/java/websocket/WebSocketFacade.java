@@ -50,6 +50,7 @@ public class WebSocketFacade extends Endpoint {
     private void loadGame(LoadGameMessage loadGameMessage) {
         gameplay.updateGame(loadGameMessage.game);
         gameplay.printBoard(playerColor);
+        gameplay.checkWin();
     }
 
     public void reprintBoard(){

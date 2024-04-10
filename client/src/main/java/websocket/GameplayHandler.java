@@ -12,8 +12,10 @@ import static ui.EscapeSequences.BLACK_KING;
 public class GameplayHandler {
 
     public ChessGame game;
+    private boolean run;
 
     public GameplayHandler(){
+        run = true;
     }
 
     public void updateGame(ChessGame game){
@@ -183,5 +185,35 @@ public class GameplayHandler {
 
     public void send(NotificationMessage notificationMessage) {
         System.out.println(notificationMessage.getMessage());
+    }
+
+    public void checkWin() {
+        ChessGame.TeamColor blackUser = ChessGame.TeamColor.BLACK;
+        ChessGame.TeamColor whiteUser = ChessGame.TeamColor.WHITE;
+
+        if(game.isInCheckmate(blackUser)){
+            System.out.println("White has won!");
+            endGame();
+            return;
+        }
+
+        if(game.isInCheckmate(whiteUser)){
+            System.out.println("Black has won!");
+            endGame();
+            return;
+        }
+
+        if(game.isInStalemate(blackUser) || game.isInStalemate(whiteUser)){
+            System.out.println("Game is in Stalemate, nobody wins");
+            endGame();
+        }
+    }
+
+    public boolean isGameRunning(){
+        return run;
+    }
+
+    public void endGame() {
+        run = false;
     }
 }
