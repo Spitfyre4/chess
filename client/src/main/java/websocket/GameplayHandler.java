@@ -41,7 +41,7 @@ public class GameplayHandler {
         }
         System.out.println();
 
-        for(int i = 1; i<=8; i++){
+        for (int i = 8; i >= 1; i--) {
             System.out.print(i + " ");
             for(int j = 1; j<=8; j++) {
                 ChessPiece piece = board.getPiece(new ChessPosition(i, j));
@@ -84,7 +84,7 @@ public class GameplayHandler {
         }
         System.out.println();
 
-        for (int i = 8; i >= 1; i--) {
+        for (int i = 1; i <= 8; i++) {
             System.out.print(i + " ");
             for (int j = 8; j >= 1; j--) {
                 ChessPiece piece = board.getPiece(new ChessPosition(i, j));
