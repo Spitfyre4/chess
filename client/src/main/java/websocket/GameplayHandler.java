@@ -48,12 +48,12 @@ public class GameplayHandler {
                 System.out.print("|");
                 if (piece != null) {
                     switch (piece.getPieceType()) {
-                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
-                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
-                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
-                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
-                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
-                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
+                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_PAWN : BLACK_PAWN);
+                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_ROOK : BLACK_ROOK);
+                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KNIGHT : BLACK_KNIGHT);
+                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_BISHOP : BLACK_BISHOP);
+                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_QUEEN : BLACK_QUEEN);
+                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KING : BLACK_KING);
                     }
                 }
                 else{
@@ -72,6 +72,8 @@ public class GameplayHandler {
         System.out.println();
 
         System.out.println();
+
+        System.out.println(">>> " + game.getTeamTurn() + "'s turn");
     }
 
     public void printBlack(){
@@ -92,17 +94,17 @@ public class GameplayHandler {
                 if (piece != null) {
                     switch (piece.getPieceType()) {
                         case PAWN ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_PAWN : BLACK_PAWN);
                         case ROOK ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_ROOK : BLACK_ROOK);
                         case KNIGHT ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KNIGHT : BLACK_KNIGHT);
                         case BISHOP ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_BISHOP : BLACK_BISHOP);
                         case QUEEN ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_QUEEN : BLACK_QUEEN);
                         case KING ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KING : BLACK_KING);
                     }
                 } else {
                     System.out.print(" \u2001\u2005\u200A ");
@@ -120,6 +122,8 @@ public class GameplayHandler {
         System.out.println();
 
         System.out.println();
+
+        System.out.println(">>> " + game.getTeamTurn() + "'s turn");
     }
 
     public void send(NotificationMessage notificationMessage) {

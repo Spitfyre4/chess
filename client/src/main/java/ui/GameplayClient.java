@@ -67,6 +67,7 @@ public class GameplayClient {
         }
 
         while (run) {
+
             String line = scanner.nextLine();
             try {
                 if (observer) {
@@ -126,6 +127,10 @@ public class GameplayClient {
 
         ChessPiece piece = null;
 
+        if(!Objects.equals(gameplay.game.getTeamTurn().toString(), playerColor)){
+            System.out.println("Wait your turn");
+            return;
+        }
         while (!startPiece) {
             startPos = null;
             System.out.println("What is the column of the piece you would like to move?");
