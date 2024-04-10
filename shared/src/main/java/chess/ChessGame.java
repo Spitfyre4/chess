@@ -64,7 +64,7 @@ public class ChessGame {
         for(ChessMove move: piece.pieceMoves(board, startPosition)){
             board.addPiece(move.getEndPosition(), piece);
             board.removePiece(move.getStartPosition());
-            if(isInCheck(ogBoard.getPiece(startPosition).getTeamColor())){
+            if(isInCheck(ogBoard.getPiece(startPosition).getTeamColor()) || isInCheckmate(ogBoard.getPiece(startPosition).getTeamColor())){
                 this.board = new ChessBoard(ogBoard);
                 continue;
             }

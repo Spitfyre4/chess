@@ -205,7 +205,7 @@ public class GameplayHandler {
 
         if(game.isInStalemate(blackUser) || game.isInStalemate(whiteUser)){
             System.out.println("Game is in Stalemate, nobody wins");
-            endGame();
+//            endGame();
         }
     }
 

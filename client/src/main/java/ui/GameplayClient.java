@@ -7,9 +7,7 @@ import server.ServerFacade;
 import websocket.GameplayHandler;
 import websocket.WebSocketFacade;
 
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 public class GameplayClient {
     public final ServerFacade server;
@@ -107,15 +105,23 @@ public class GameplayClient {
     }
 
     private void redraw() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         this.ws.reprintBoard();
     }
 
     private void movePiece() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         boolean startPiece = false;
         boolean endPosBool = false;
         ChessPosition startPos = null;
         ChessMove moveFinal = null;
+        Set<ChessMove> moveSet = new HashSet<>();
+
 
         ChessPiece piece = null;
 
@@ -152,7 +158,8 @@ public class GameplayClient {
             int index = 1;
             System.out.println("Where would you like to move your " + piece.getPieceType() + "?");
             System.out.println("Your possible moves are:");
-            for (ChessMove move : moves){
+            moveSet.addAll(moves);
+            for (ChessMove move : moveSet){
                 System.out.print(index + ") " + move.getEndPosition().toMove());
                 if (move.getPromotionPiece() != null){
                     System.out.println(" promoting to a " + move.getPromotionPiece().toString());
@@ -177,6 +184,9 @@ public class GameplayClient {
     }
 
     private void highlight() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         ChessPosition startPos = null;
         System.out.println("What is the column of the piece's moves you would like to highlight?");
@@ -207,10 +217,16 @@ public class GameplayClient {
     }
 
     private void resign() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         this.ws.resign(auth.authToken(), gameID, auth.username());
     }
 
     public void help() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         System.out.println("""
                 - redraw: Redraw the chess board
                 - move: Allows you to make a move
@@ -245,6 +261,9 @@ public class GameplayClient {
     }
 
     public void ObserverHelp() throws ServerException {
+        if(!gameplay.isGameRunning()){
+            return;
+        }
         System.out.println("""
                 - leave: Leave game
                 - quit: Quit application
