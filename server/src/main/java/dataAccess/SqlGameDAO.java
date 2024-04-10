@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 
@@ -117,6 +118,29 @@ public class SqlGameDAO implements GameDAO{
             throw new DataAccessException(e.getMessage(), 500);
         }
 
+    }
+
+    @Override
+    public void updateGame(ChessGame newGame, int gameID) throws DataAccessException {
+        databaseManager.configureDatabase();
+        GameData oldGame = getGame(gameID);
+        GameData newGameData = new GameData(gameID, oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), newGame);
+        try (Connection conn = databaseManager.getConnection()) {
+            var statement = "UPDATE game SET jsonChessGame=?, json=? WHERE gameID=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                String jsonChessGame = new Gson().toJson(newGame);
+                String gameDataJson = new Gson().toJson(newGameData);
+                ps.setString(1, jsonChessGame);
+                ps.setString(2, gameDataJson);
+                ps.setInt(3, gameID);
+                int rowsUpdated = ps.executeUpdate();
+                if (rowsUpdated == 0) {
+                    throw new DataAccessException("Error: Game not found", 404);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
 

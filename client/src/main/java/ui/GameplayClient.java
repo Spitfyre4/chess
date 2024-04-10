@@ -31,7 +31,7 @@ public class GameplayClient {
         this.url = url;
         this.gameID = gameID;
         this.playerColor = null;
-        this.run = false;
+        this.run = true;
         this.ws = new WebSocketFacade(url, this.gameplay);
         this.auth = auth;
         this.ws.joinObserver(auth.authToken(), gameID, auth.username());
@@ -164,6 +164,7 @@ public class GameplayClient {
                 else{
                     System.out.println();
                 }
+                index++;
             }
 
             int moveIndex = scanner.nextInt();

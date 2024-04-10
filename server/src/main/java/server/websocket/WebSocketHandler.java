@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import exception.ServerException;
@@ -31,7 +32,7 @@ public class WebSocketHandler {
 
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException, DataAccessException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
 //        System.out.println("in wsHandler");
         UserGameCommand cmd = new Gson().fromJson(message, UserGameCommand.class);
         switch (cmd.getCommandType()) {
@@ -58,11 +59,16 @@ public class WebSocketHandler {
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
     }
 
-    private void makeMove(MakeMoveCommand cmd) throws IOException {
+    private void makeMove(MakeMoveCommand cmd) throws IOException, DataAccessException, InvalidMoveException {
+        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+        GameData game = games.getGame(new GameID(cmd.gameID));
+        game.game().makeMove(cmd.move);
+        gameService.makeMove(game.game(), cmd.gameID);
         LoadGameMessage message =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, null);
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
         System.out.println("got the move: " + cmd.move);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+        connections.sendMessage(cmd.getAuthString(), message);
     }
 
 
@@ -72,9 +78,9 @@ public class WebSocketHandler {
         NotificationMessage message =
                 new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
         GameData game = games.getGame(new GameID(cmd.gameID));
-        assert game != null;
         LoadGameMessage gMessage =
                 new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
         connections.sendMessage(cmd.getAuthString(), gMessage);

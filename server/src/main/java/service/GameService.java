@@ -1,12 +1,12 @@
 package service;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import model.GameData;
-import model.UserData;
 
 import java.util.Collection;
 
@@ -45,5 +45,7 @@ public class GameService {
     }
 
 
-
+    public void makeMove(ChessGame game, int gameID) throws DataAccessException {
+        gameDatabase.updateGame(game, gameID);
+    }
 }
