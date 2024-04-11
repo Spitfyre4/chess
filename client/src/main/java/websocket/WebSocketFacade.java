@@ -48,6 +48,10 @@ public class WebSocketFacade extends Endpoint {
     }
 
     private void loadGame(LoadGameMessage loadGameMessage) {
+        if (loadGameMessage.resign){
+            gameplay.endGame();
+            return;
+        }
         gameplay.updateGame(loadGameMessage.game);
         gameplay.printBoard(playerColor);
         gameplay.checkWin();
@@ -62,9 +66,9 @@ public class WebSocketFacade extends Endpoint {
     }
 
 
-    public void resign(String authString, int gameID, String username) throws ServerException {
+    public void resign(String authString, int gameID, String username, String playerColor) throws ServerException {
         try {
-            var req = new ResignCommand(authString, gameID, username);
+            var req = new ResignCommand(authString, gameID, username, playerColor);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);

@@ -45,10 +45,18 @@ public class WebSocketHandler {
     }
 
     private void resign(ResignCommand cmd) throws IOException {
-        String phrase = cmd.username + " resigned";
+        String op = "WHITE";
+        if (cmd.playerColor.equals("WHITE")) {
+            op = "BLACK";
+        }
+        String phrase = cmd.username + " has resigned\n" + op + " has won!";
         NotificationMessage message =
                 new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+        LoadGameMessage message2 =
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, null, true);
+        connections.broadcast(cmd.getAuthString(), message2, cmd.gameID);
+
     }
 
     private void leave(LeaveCommand cmd) throws IOException {
@@ -65,7 +73,7 @@ public class WebSocketHandler {
         game.game().makeMove(cmd.move);
         gameService.makeMove(game.game(), cmd.gameID);
         LoadGameMessage message =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
         System.out.println("got the move: " + cmd.move);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
         connections.sendMessage(cmd.getAuthString(), message);
@@ -82,7 +90,7 @@ public class WebSocketHandler {
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
         GameData game = games.getGame(new GameID(cmd.gameID));
         LoadGameMessage gMessage =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
         connections.sendMessage(cmd.getAuthString(), gMessage);
     }
 
@@ -97,7 +105,7 @@ public class WebSocketHandler {
         GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
         GameData game = games.getGame(new GameID(cmd.gameID));
         LoadGameMessage gMessage =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game());
+                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
         connections.sendMessage(cmd.getAuthString(), gMessage);
     }
 }

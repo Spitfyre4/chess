@@ -20,17 +20,11 @@ public class ConnectionManager {
     }
 
     public void broadcast(String excludeAuth, ServerMessage message, int gameID) throws IOException {
-        System.out.println("in broadcast");
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
-            System.out.println("- In for loop");
             if (c.session.isOpen()) {
-                System.out.println("- In first if loop(sSession is open)");
                 if (!c.authToken.equals(excludeAuth)) {
-                    System.out.println("- In second if loop(Excluded auth)");
                     if(c.gameID == gameID){
-                        System.out.println("- In third if loop(GameId is equal)");
-                        System.out.println("- In third if loop(GameId is equal)");
                         c.send(message);
                     }
                 }

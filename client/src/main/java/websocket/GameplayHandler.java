@@ -5,6 +5,7 @@ import webSocketMessages.serverMessages.NotificationMessage;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 import static ui.EscapeSequences.BLACK_KING;
@@ -203,9 +204,9 @@ public class GameplayHandler {
             return;
         }
 
-        if(game.isInStalemate(blackUser) || game.isInStalemate(whiteUser)){
+        if(!game.isInStalemate(blackUser) || !game.isInStalemate(whiteUser)){
             System.out.println("Game is in Stalemate, nobody wins");
-//            endGame();
+            endGame();
         }
     }
 
@@ -215,5 +216,19 @@ public class GameplayHandler {
 
     public void endGame() {
         run = false;
+    }
+
+    public void confirmLeave() {
+        Boolean stay = true;
+        Scanner scanner = new Scanner(System.in);
+
+        while(stay){
+            System.out.println("Would you like to leave the game?(Yes/No)");
+            String input = scanner.nextLine();
+            if(input.equals("Yes")){
+                stay = false;
+            }
+        }
+
     }
 }

@@ -106,6 +106,7 @@ public class GameplayClient {
 
     private void redraw() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
         this.ws.reprintBoard();
@@ -113,6 +114,7 @@ public class GameplayClient {
 
     private void movePiece() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
         Scanner scanner = new Scanner(System.in);
@@ -159,7 +161,8 @@ public class GameplayClient {
             System.out.println("Where would you like to move your " + piece.getPieceType() + "?");
             System.out.println("Your possible moves are:");
             moveSet.addAll(moves);
-            for (ChessMove move : moveSet){
+            moves = new ArrayList<>(moveSet);
+            for (ChessMove move : moves){
                 System.out.print(index + ") " + move.getEndPosition().toMove());
                 if (move.getPromotionPiece() != null){
                     System.out.println(" promoting to a " + move.getPromotionPiece().toString());
@@ -185,6 +188,7 @@ public class GameplayClient {
 
     private void highlight() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
         Scanner scanner = new Scanner(System.in);
@@ -218,13 +222,25 @@ public class GameplayClient {
 
     private void resign() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
-        this.ws.resign(auth.authToken(), gameID, auth.username());
+
+        String op = "WHITE";
+        if (playerColor.equals("WHITE")) {
+            op = "BLACK";
+        }
+
+        System.out.println("You have resigned");
+        this.ws.resign(auth.authToken(), gameID, auth.username(), playerColor);
+        System.out.println(op + " has won!");
+
+        gameplay.confirmLeave();
     }
 
     public void help() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
         System.out.println("""
@@ -262,6 +278,7 @@ public class GameplayClient {
 
     public void ObserverHelp() throws ServerException {
         if(!gameplay.isGameRunning()){
+            gameplay.confirmLeave();
             return;
         }
         System.out.println("""
