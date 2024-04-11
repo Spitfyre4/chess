@@ -14,9 +14,9 @@ import java.util.UUID;
 public class SqlAuthDAO implements AuthDAO{
 
     public final DatabaseManager databaseManager = new DatabaseManager();
-//    public SqlAuthDAO() throws DataAccessException {
-//        databaseManager.configureDatabase();
-//    }
+    public SqlAuthDAO() throws DataAccessException {
+        databaseManager.configureDatabase();
+    }
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString();
@@ -31,7 +31,6 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
             var statement = "SELECT json FROM auth WHERE authToken=?";
             try(var ps = conn.prepareStatement(statement)) {
@@ -51,7 +50,6 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
             var statement = "DELETE FROM auth WHERE authToken=?";
             try(var ps = conn.prepareStatement(statement)) {
@@ -68,7 +66,6 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public Collection<AuthData> listAuths() throws DataAccessException {
-        databaseManager.configureDatabase();
         Collection<AuthData> auths = new ArrayList<>();
 
         try (Connection conn = databaseManager.getConnection()){
@@ -89,7 +86,6 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public void clear() throws DataAccessException {
-        databaseManager.configureDatabase();
         var statement = "TRUNCATE auth";
         databaseManager.executeUpdate(statement);
     }

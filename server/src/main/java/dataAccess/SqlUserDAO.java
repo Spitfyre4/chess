@@ -15,12 +15,11 @@ import static java.sql.Types.NULL;
 public class SqlUserDAO implements UserDAO{
 
     public final DatabaseManager databaseManager = new DatabaseManager();
-//    public SqlUserDAO() throws DataAccessException {
-//        databaseManager.configureDatabase();
-//    }
+    public SqlUserDAO() throws DataAccessException {
+        databaseManager.configureDatabase();
+    }
     @Override
     public UserData createUser(UserData user) throws DataAccessException {
-        databaseManager.configureDatabase();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(user.password());
 
@@ -40,7 +39,6 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
             var statement = "SELECT json FROM user WHERE username=?";
             try(var ps = conn.prepareStatement(statement)) {
@@ -60,7 +58,6 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public Collection<UserData> listUsers() throws DataAccessException {
-        databaseManager.configureDatabase();
         Collection<UserData> users = new ArrayList<>();
 
         try (Connection conn = databaseManager.getConnection()){
@@ -81,7 +78,6 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public boolean userExists(UserData user) throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
              var statement = "SELECT json FROM user WHERE username=?";
              try(var ps = conn.prepareStatement(statement)) {
@@ -106,7 +102,6 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public void clear() throws DataAccessException {
-        databaseManager.configureDatabase();
         var statement = "TRUNCATE user";
         databaseManager.executeUpdate(statement);
     }

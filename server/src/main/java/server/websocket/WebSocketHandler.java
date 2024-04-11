@@ -4,6 +4,7 @@ import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import exception.ServerException;
+import model.AuthData;
 import model.GameData;
 import model.GameID;
 import model.GamesData;
@@ -12,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.GameHandler;
 import service.GameService;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -82,30 +84,67 @@ public class WebSocketHandler {
 
     private void joinObserver(JoinObserverCommand cmd, Session session) throws IOException, DataAccessException {
         connections.add(cmd.getAuthString(), cmd.gameID, session);
-        String phrase = cmd.username + " joined as an observer";
-        NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
-        connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
-        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
-        GameData game = games.getGame(new GameID(cmd.gameID));
-        LoadGameMessage gMessage =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
-        connections.sendMessage(cmd.getAuthString(), gMessage);
+        try {
+
+            GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+            GameData game = games.getGame(new GameID(cmd.gameID));
+
+            String phrase = cmd.username + " joined as an observer";
+            NotificationMessage message =
+                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+
+            LoadGameMessage gMessage =
+                    new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
+            connections.sendMessage(cmd.getAuthString(), gMessage);
+        }
+        catch (Exception ex){
+            ErrorMessage message =
+                    new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            connections.sendMessage(cmd.getAuthString(), message);
+        }
     }
 
     private void joinPlayer(JoinPlayerCommand cmd, Session session) throws IOException, DataAccessException {
 //        System.out.println("in joinPlayer");
         connections.add(cmd.getAuthString(), cmd.gameID, session);
-        String phrase = cmd.username + " joined as " + cmd.playerColor + " player";
-        NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
-        connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
-        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
-        GameData game = games.getGame(new GameID(cmd.gameID));
-        LoadGameMessage gMessage =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
-        connections.sendMessage(cmd.getAuthString(), gMessage);
+        try {
+            GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+            GameData game = games.getGame(new GameID(cmd.gameID));
+            AuthData auth = gameService.authDatabase.getAuth(cmd.getAuthString());
+
+
+            String username = null;
+            if (cmd.playerColor.equals("WHITE")) {
+                username = game.whiteUsername();
+            }
+            if (cmd.playerColor.equals("BLACK")) {
+                username = game.blackUsername();
+            }
+
+            if (username == null || !username.equals(auth.username())) {
+                ErrorMessage message =
+                        new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
+
+            String phrase = cmd.username + " joined as " + cmd.playerColor + " player";
+            NotificationMessage message =
+                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+
+            LoadGameMessage gMessage =
+                    new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
+            connections.sendMessage(cmd.getAuthString(), gMessage);
+        }
+        catch (Exception ex){
+            ErrorMessage message =
+                    new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            connections.sendMessage(cmd.getAuthString(), message);
+        }
     }
+
 }

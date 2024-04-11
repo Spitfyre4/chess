@@ -13,12 +13,11 @@ import java.util.Objects;
 public class SqlGameDAO implements GameDAO{
 
     public final DatabaseManager databaseManager = new DatabaseManager();
-//    public SqlGameDAO() throws DataAccessException {
-//        databaseManager.configureDatabase();
-//    }
+    public SqlGameDAO() throws DataAccessException {
+        databaseManager.configureDatabase();
+    }
     @Override
     public void createGame(GameData game) throws DataAccessException {
-        databaseManager.configureDatabase();
         game = new GameData
                 (game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         var statement = "INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, jsonChessGame, json) VALUES (?, ?, ?, ?, ?, ?)";
@@ -30,7 +29,6 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
             var statement = "SELECT json FROM game WHERE gameID=?";
             try(var ps = conn.prepareStatement(statement)) {
@@ -71,7 +69,6 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void joinGame(String username, String playerColor, int gameId) throws DataAccessException {
-        databaseManager.configureDatabase();
 
         GameData updatedGame = null;
         GameData game = getGame(gameId);
@@ -95,14 +92,12 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void clear() throws DataAccessException {
-        databaseManager.configureDatabase();
         var statement = "TRUNCATE game";
         databaseManager.executeUpdate(statement);
     }
 
     @Override
     public int getGameID() throws DataAccessException {
-        databaseManager.configureDatabase();
         try (Connection conn = databaseManager.getConnection()){
             var statement = "SELECT MAX(gameID) AS max_gameID FROM game";
             try(var ps = conn.prepareStatement(statement)) {
@@ -122,7 +117,6 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void updateGame(ChessGame newGame, int gameID) throws DataAccessException {
-        databaseManager.configureDatabase();
         GameData oldGame = getGame(gameID);
         GameData newGameData = new GameData(gameID, oldGame.whiteUsername(), oldGame.blackUsername(), oldGame.gameName(), newGame);
         try (Connection conn = databaseManager.getConnection()) {

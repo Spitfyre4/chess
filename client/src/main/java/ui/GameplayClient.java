@@ -208,12 +208,12 @@ public class GameplayClient {
 
         ChessPiece piece = gameplay.game.getBoard().getPiece(startPos);
 
-        if (piece != null && Objects.equals(piece.getTeamColor().toString(), playerColor)) {
-            if(playerColor.equals("WHITE")) {
-                gameplay.highlightWhite(piece, startPos);
+        if (piece != null && Objects.equals(piece.getTeamColor(), gameplay.game.getTeamTurn())) {
+            if(playerColor!= null && playerColor.equals("BLACK")) {
+                gameplay.highlight(piece, startPos, true);
             }
             else{
-                gameplay.highlightWhite(piece,startPos);
+                gameplay.highlight(piece,startPos, false);
             }
         } else {
             System.out.println("There is no " + playerColor + " piece there");
@@ -268,6 +268,8 @@ public class GameplayClient {
                     System.out.println("Goodbye!");
                     System.exit(0);
                 }
+                case "highlight" -> highlight();
+                case "redraw" -> redraw();
                 default -> ObserverHelp();
             }
 
@@ -282,6 +284,8 @@ public class GameplayClient {
             return;
         }
         System.out.println("""
+                - redraw: Redraw the chess board
+                - highlight: Highlight all legal moves
                 - leave: Leave game
                 - quit: Quit application
                 - help: Reprint commands

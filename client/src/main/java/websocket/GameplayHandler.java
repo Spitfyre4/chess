@@ -1,6 +1,7 @@
 package websocket;
 
 import chess.*;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 
 import java.util.ArrayList;
@@ -127,7 +128,7 @@ public class GameplayHandler {
         System.out.println(">>> " + game.getTeamTurn() + "'s turn");
     }
 
-    public void highlightWhite(ChessPiece ogPiece, ChessPosition startPos){
+    public void highlight(ChessPiece ogPiece, ChessPosition startPos, Boolean isBlack){
         ChessBoard board = game.getBoard();
         ArrayList<ChessMove> moves = (ArrayList<ChessMove>)ogPiece.pieceMoves(board, startPos);
         ChessMove move;
@@ -137,13 +138,13 @@ public class GameplayHandler {
         for (int i = 0; i <= 7; i++) {
             char letter = (char) ('A' + i);
             System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
+            System.out.print(isBlack ? (char) ('H' - i) : letter);
         }
         System.out.println();
 
-        for (int i = 8; i >= 1; i--) {
+        for (int i = isBlack ? 1 : 8; isBlack ? i <= 8 : i >= 1; i += isBlack ? 1 : -1) {
             System.out.print(i + " ");
-            for(int j = 1; j<=8; j++) {
+            for(int j = isBlack ? 8 : 1; isBlack ? j >= 1 : j <= 8; j += isBlack ? -1 : 1) {
                 endPos = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(endPos);
                 move = new ChessMove(startPos, endPos, null);
@@ -175,7 +176,7 @@ public class GameplayHandler {
         for (int i = 0; i <= 7; i++) {
             char letter = (char) ('A' + i);
             System.out.print(" \u2001\u2005\u200A  ");
-            System.out.print(letter);
+            System.out.print(isBlack ? (char) ('H' - i) : letter);
         }
         System.out.println();
 
@@ -187,6 +188,11 @@ public class GameplayHandler {
     public void send(NotificationMessage notificationMessage) {
         System.out.println(notificationMessage.getMessage());
     }
+
+    public void error(ErrorMessage errorMessage) {
+        System.out.println(errorMessage.getMessage());
+    }
+
 
     public void checkWin() {
         ChessGame.TeamColor blackUser = ChessGame.TeamColor.BLACK;
@@ -221,11 +227,13 @@ public class GameplayHandler {
     public void confirmLeave() {
         Boolean stay = true;
         Scanner scanner = new Scanner(System.in);
+        endGame();
 
         while(stay){
             System.out.println("Would you like to leave the game?(Yes/No)");
             String input = scanner.nextLine();
-            if(input.equals("Yes")){
+            input = input.toLowerCase();
+            if(input.equals("yes")){
                 stay = false;
             }
         }

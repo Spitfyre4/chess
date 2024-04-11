@@ -84,6 +84,7 @@ public class PostLoginClient {
         int gameNum = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter requested player color(WHITE/BLACK): ");
         String playerColor = scanner.nextLine();
+        playerColor = playerColor.toUpperCase();
 
         GamesData games = server.listGames(auth.authToken());
 

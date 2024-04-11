@@ -3,6 +3,7 @@ package websocket;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.*;
+import webSocketMessages.serverMessages.ErrorMessage;
 import webSocketMessages.serverMessages.LoadGameMessage;
 import webSocketMessages.serverMessages.NotificationMessage;
 import webSocketMessages.serverMessages.ServerMessage;
@@ -37,7 +38,7 @@ public class WebSocketFacade extends Endpoint {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> gameplay.send(new Gson().fromJson(message, NotificationMessage.class));
-                        case ERROR -> System.out.println("Error");
+                        case ERROR -> gameplay.error(new Gson().fromJson(message, ErrorMessage.class));
                         case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadGameMessage.class));
                     }
                 }
@@ -50,6 +51,7 @@ public class WebSocketFacade extends Endpoint {
     private void loadGame(LoadGameMessage loadGameMessage) {
         if (loadGameMessage.resign){
             gameplay.endGame();
+            System.out.println("Press anything to continue");
             return;
         }
         gameplay.updateGame(loadGameMessage.game);
@@ -58,7 +60,11 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void reprintBoard(){
-        gameplay.printBoard(playerColor);
+        String color = playerColor;
+        if (playerColor == null){
+            color = "WHITE";
+        }
+        gameplay.printBoard(color);
     }
 
     @Override
