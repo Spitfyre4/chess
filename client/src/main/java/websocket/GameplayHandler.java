@@ -199,19 +199,16 @@ public class GameplayHandler {
         ChessGame.TeamColor whiteUser = ChessGame.TeamColor.WHITE;
 
         if(game.isInCheckmate(blackUser)){
-            System.out.println("White has won!");
             endGame();
             return;
         }
 
         if(game.isInCheckmate(whiteUser)){
-            System.out.println("Black has won!");
             endGame();
             return;
         }
 
         if(!game.isInStalemate(blackUser) || !game.isInStalemate(whiteUser)){
-            System.out.println("Game is in Stalemate, nobody wins");
             endGame();
         }
     }

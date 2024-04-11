@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
@@ -74,11 +75,37 @@ public class WebSocketHandler {
         GameData game = games.getGame(new GameID(cmd.gameID));
         game.game().makeMove(cmd.move);
         gameService.makeMove(game.game(), cmd.gameID);
+
         LoadGameMessage message =
                 new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
-        System.out.println("got the move: " + cmd.move);
         connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
         connections.sendMessage(cmd.getAuthString(), message);
+
+        String winString = checkWin(game);
+        if(winString!=null){
+            NotificationMessage message2 =
+                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, winString);
+            connections.broadcast("everyone", message2, cmd.gameID);
+        }
+    }
+
+    public String checkWin(GameData gameData) {
+        ChessGame.TeamColor blackUser = ChessGame.TeamColor.BLACK;
+        ChessGame.TeamColor whiteUser = ChessGame.TeamColor.WHITE;
+        ChessGame game = gameData.game();
+
+        if(game.isInCheckmate(blackUser)){
+           return gameData.whiteUsername() + " has won!\nPress anything to continue";
+        }
+
+        if(game.isInCheckmate(whiteUser)){
+            return gameData.blackUsername() + " has won!\nPress anything to continue";
+        }
+
+        if(!game.isInStalemate(blackUser) || !game.isInStalemate(whiteUser)){
+            return "Game is in Stalemate, nobody wins\nPress anything to continue";
+        }
+        return null;
     }
 
 
