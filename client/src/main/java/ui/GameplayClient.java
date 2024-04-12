@@ -99,7 +99,7 @@ public class GameplayClient {
                 default -> help();
             }
 
-        } catch (ServerException e) {
+        } catch (ServerException | InvalidMoveException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -112,7 +112,7 @@ public class GameplayClient {
         this.ws.reprintBoard();
     }
 
-    private void movePiece() throws ServerException {
+    private void movePiece() throws ServerException, InvalidMoveException {
         if(!gameplay.isGameRunning()){
             gameplay.confirmLeave();
             return;
@@ -122,7 +122,6 @@ public class GameplayClient {
         boolean endPosBool = false;
         ChessPosition startPos = null;
         ChessMove moveFinal = null;
-        Set<ChessMove> moveSet = new HashSet<>();
 
 
         ChessPiece piece = null;
@@ -131,18 +130,20 @@ public class GameplayClient {
             System.out.println("Wait your turn");
             return;
         }
-        while (!startPiece) {
-            startPos = null;
             System.out.println("What is the column of the piece you would like to move?");
             String startColLetter = scanner.nextLine();
             if (startColLetter.length() != 1 || !startColLetter.matches("[a-zA-Z]+")) {
                 System.out.println("Enter a valid letter");
-                continue;
+                return;
             }
             int startCol = startColLetter.charAt(0) - 'a' + 1;
 
             System.out.println("What is the row of the piece you would like to move?");
             int startRow = scanner.nextInt();
+            if(startRow < 1 || startRow > 8){
+                System.out.println("Please enter a number between 1-8");
+                return;
+            }
 
             startPos = new ChessPosition(startRow, startCol);
 
@@ -152,17 +153,24 @@ public class GameplayClient {
                 startPiece = true;
             } else {
                 System.out.println("There is no " + playerColor + " piece there");
+                return;
             }
-        }
 
-        while(!endPosBool){
             ArrayList<ChessMove> moves = (ArrayList<ChessMove>)piece.pieceMoves(gameplay.game.getBoard(), startPos);
+            if (moves.isEmpty()){
+                System.out.println("Your " + piece.getPieceType() + " has no possible moves");
+                return;
+            }
             int index = 1;
             System.out.println("Where would you like to move your " + piece.getPieceType() + "?");
             System.out.println("Your possible moves are:");
-            moveSet.addAll(moves);
+            Set<ChessMove> moveSet = new HashSet<>(moves);
             moves = new ArrayList<>(moveSet);
             for (ChessMove move : moves){
+//                if(badMove(move)){
+//                    moves.remove(move);
+//                    continue;
+//                }
                 System.out.print(index + ") " + move.getEndPosition().toMove());
                 if (move.getPromotionPiece() != null){
                     System.out.println(" promoting to a " + move.getPromotionPiece().toString());
@@ -174,17 +182,27 @@ public class GameplayClient {
             }
 
             int moveIndex = scanner.nextInt();
-            if(moveIndex > moves.size() || moveIndex < 1){
+            if(moveIndex > moves.size() || moveIndex < 1) {
                 System.out.println("Invalid input");
-                continue;
+                return;
             }
 
             moveFinal = moves.get(moveIndex-1);
             endPosBool = true;
-        }
+
 
         this.ws.makeMove(this.auth.authToken(), this.gameID, this.playerColor, moveFinal);
     }
+
+//    private boolean badMove(ChessMove move) throws InvalidMoveException {
+//        ChessGame gameTest = new ChessGame(gameplay.game);
+//        gameTest.makeMove(move);
+//        ChessGame.TeamColor color = ChessGame.TeamColor.WHITE;
+//        if(playerColor.equals("BLACK")){
+//            color = ChessGame.TeamColor.BLACK;
+//        }
+//        return gameTest.isInCheck(color) || gameTest.isInCheckmate(color);
+//    }
 
     private void highlight() throws ServerException {
         if(!gameplay.isGameRunning()){

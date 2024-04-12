@@ -15,10 +15,19 @@ public class ChessGame {
     private TeamColor turn;
     private ChessBoard board;
 
+    private boolean isGameOver;
+
     public ChessGame() {
         this.turn = TeamColor.WHITE;
         this.board = new ChessBoard();
+        isGameOver = false;
         board.resetBoard();
+    }
+
+    public ChessGame(ChessGame game){
+        this.turn = game.getTeamTurn();
+        this.board = game.getBoard();
+        isGameOver = false;
     }
 
     /**
@@ -191,15 +200,15 @@ public class ChessGame {
             for(int j = 1; j <=8; j++){
                 ChessPosition pos = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(pos);
-                if(piece == null || piece.getTeamColor().equals(teamColor)){
+                if(piece == null || !piece.getTeamColor().equals(teamColor)){
                     continue;
                 }
                 if(!validMoves(pos).isEmpty()){
-                    return true;
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -218,5 +227,13 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return this.board;
+    }
+
+    public void forceGameover(){
+        isGameOver = true;
+    }
+
+    public boolean gameOver(){
+        return isGameOver;
     }
 }

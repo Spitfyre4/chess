@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
-import exception.ServerException;
 import model.AuthData;
 import model.GameData;
 import model.GameID;
@@ -12,16 +11,15 @@ import model.GamesData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import service.GameHandler;
 import service.GameService;
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.LoadGameMessage;
-import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
@@ -48,44 +46,127 @@ public class WebSocketHandler {
     }
 
     private void resign(ResignCommand cmd) throws IOException {
-        String op = "WHITE";
-        if (cmd.playerColor.equals("WHITE")) {
-            op = "BLACK";
+        try {
+            GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+            GameData game = games.getGame(new GameID(cmd.gameID));
+
+            AuthData auth = gameService.authDatabase.getAuth(cmd.getAuthString());
+            String username = auth.username();
+            if (!Objects.equals(username, game.whiteUsername()) && !Objects.equals(username, game.blackUsername())) {
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
+
+            if(game.game().gameOver()){
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: Game already over");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
+
+            game.game().forceGameover();
+
+            gameService.gameDatabase.updateGame(game.game(), game.gameID());
+
+            String op;
+            if(game.blackUsername().equals(auth.username())){
+                op = "WHITE";
+            }
+            else {
+                op = "BLACK";
+            }
+
+            String phrase = cmd.username + " has resigned\n" + op + " has won!";
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast("everyone", message, cmd.gameID);
         }
-        String phrase = cmd.username + " has resigned\n" + op + " has won!";
-        NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
-        connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
-        LoadGameMessage message2 =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, null, true);
-        connections.broadcast(cmd.getAuthString(), message2, cmd.gameID);
+        catch (Exception ex){
+            Error message =
+                    new Error(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            connections.sendMessage(cmd.getAuthString(), message);
+        }
 
     }
 
     private void leave(LeaveCommand cmd) throws IOException {
-        connections.remove(cmd.getAuthString());
-        String phrase = cmd.username + " left the game";
-        NotificationMessage message =
-                new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
-        connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+        try {
+            connections.remove(cmd.getAuthString());
+            String phrase = cmd.username + " left the game";
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+        }
+        catch (Exception ex){
+            Error message =
+                    new Error(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            connections.sendMessage(cmd.getAuthString(), message);
+        }
+
     }
 
     private void makeMove(MakeMoveCommand cmd) throws IOException, DataAccessException, InvalidMoveException {
-        GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
-        GameData game = games.getGame(new GameID(cmd.gameID));
-        game.game().makeMove(cmd.move);
-        gameService.makeMove(game.game(), cmd.gameID);
+        try {
+            GamesData games = new GamesData(gameService.listGames(cmd.getAuthString()));
+            GameData game = games.getGame(new GameID(cmd.gameID));
 
-        LoadGameMessage message =
-                new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
-        connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
-        connections.sendMessage(cmd.getAuthString(), message);
+            AuthData auth = gameService.authDatabase.getAuth(cmd.getAuthString());
+            String username = auth.username();
+            if (!Objects.equals(username, game.whiteUsername()) && !Objects.equals(username, game.blackUsername())) {
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
 
-        String winString = checkWin(game);
-        if(winString!=null){
-            NotificationMessage message2 =
-                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, winString);
-            connections.broadcast("everyone", message2, cmd.gameID);
+            if(game.game().gameOver()){
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: Game already over");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
+
+
+            String usernameToCheck = game.whiteUsername();
+            if(game.game().getTeamTurn() == ChessGame.TeamColor.BLACK){
+                usernameToCheck = game.blackUsername();
+            }
+            if(!Objects.equals(auth.username(), usernameToCheck)){
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
+                connections.sendMessage(cmd.getAuthString(), message);
+                return;
+            }
+
+
+            game.game().makeMove(cmd.move);
+            gameService.makeMove(game.game(), cmd.gameID);
+
+            String moveString = auth.username() + " moved " + cmd.move.letterMove();
+            Notification message2 =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, moveString);
+            connections.broadcast(cmd.getAuthString(), message2, cmd.gameID);
+
+            LoadGame message =
+                    new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
+            connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
+            connections.sendMessage(cmd.getAuthString(), message);
+
+            String winString = checkWin(game);
+            if (winString != null) {
+                Notification message3 =
+                        new Notification(ServerMessage.ServerMessageType.NOTIFICATION, winString);
+                connections.broadcast("everyone", message3, cmd.gameID);
+            } else {
+                checkCheck(game);
+            }
+        }
+        catch (Exception ex){
+            Error message =
+                    new Error(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            connections.sendMessage(cmd.getAuthString(), message);
         }
     }
 
@@ -95,17 +176,35 @@ public class WebSocketHandler {
         ChessGame game = gameData.game();
 
         if(game.isInCheckmate(blackUser)){
-           return gameData.whiteUsername() + " has won!\nPress anything to continue";
+           return gameData.blackUsername() + " is in checkmate\n" + gameData.whiteUsername() + " has won!\nPress anything to continue";
         }
 
         if(game.isInCheckmate(whiteUser)){
-            return gameData.blackUsername() + " has won!\nPress anything to continue";
+            return gameData.whiteUsername() + " is in checkmate\n" + gameData.blackUsername() + " has won!\nPress anything to continue";
         }
 
-        if(!game.isInStalemate(blackUser) || !game.isInStalemate(whiteUser)){
+        if(game.isInStalemate(blackUser) || game.isInStalemate(whiteUser)){
             return "Game is in Stalemate, nobody wins\nPress anything to continue";
         }
         return null;
+    }
+
+    private void checkCheck(GameData gameData) throws IOException {
+        ChessGame game = gameData.game();
+        String phrase;
+        if(game.isInCheck(ChessGame.TeamColor.WHITE)){
+            phrase = gameData.whiteUsername() + " is in check!";
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast("everyone", message, gameData.gameID());
+        }
+        else if(game.isInCheck(ChessGame.TeamColor.BLACK)){
+            phrase = gameData.blackUsername() + " is in check!";
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            connections.broadcast("everyone", message, gameData.gameID());
+        }
+
     }
 
 
@@ -118,17 +217,17 @@ public class WebSocketHandler {
             GameData game = games.getGame(new GameID(cmd.gameID));
 
             String phrase = cmd.username + " joined as an observer";
-            NotificationMessage message =
-                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
             connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
-            LoadGameMessage gMessage =
-                    new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
+            LoadGame gMessage =
+                    new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
             connections.sendMessage(cmd.getAuthString(), gMessage);
         }
         catch (Exception ex){
-            ErrorMessage message =
-                    new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            Error message =
+                    new Error(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
             connections.sendMessage(cmd.getAuthString(), message);
         }
     }
@@ -152,24 +251,24 @@ public class WebSocketHandler {
             }
 
             if (username == null || !username.equals(auth.username())) {
-                ErrorMessage message =
-                        new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
+                Error message =
+                        new Error(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
                 connections.sendMessage(cmd.getAuthString(), message);
                 return;
             }
 
             String phrase = cmd.username + " joined as " + cmd.playerColor + " player";
-            NotificationMessage message =
-                    new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
+            Notification message =
+                    new Notification(ServerMessage.ServerMessageType.NOTIFICATION, phrase);
             connections.broadcast(cmd.getAuthString(), message, cmd.gameID);
 
-            LoadGameMessage gMessage =
-                    new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
+            LoadGame gMessage =
+                    new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, game.game(), false);
             connections.sendMessage(cmd.getAuthString(), gMessage);
         }
         catch (Exception ex){
-            ErrorMessage message =
-                    new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
+            Error message =
+                    new Error(ServerMessage.ServerMessageType.ERROR,"Error: " + ex.getMessage());
             connections.sendMessage(cmd.getAuthString(), message);
         }
     }

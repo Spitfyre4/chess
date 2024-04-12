@@ -1,8 +1,8 @@
 package websocket;
 
 import chess.*;
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.Notification;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -50,12 +50,12 @@ public class GameplayHandler {
                 System.out.print("|");
                 if (piece != null) {
                     switch (piece.getPieceType()) {
-                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_PAWN : BLACK_PAWN);
-                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_ROOK : BLACK_ROOK);
-                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KNIGHT : BLACK_KNIGHT);
-                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_BISHOP : BLACK_BISHOP);
-                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_QUEEN : BLACK_QUEEN);
-                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KING : BLACK_KING);
+                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
+                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
+                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
+                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
+                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
+                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
                     }
                 }
                 else{
@@ -96,17 +96,17 @@ public class GameplayHandler {
                 if (piece != null) {
                     switch (piece.getPieceType()) {
                         case PAWN ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_PAWN : BLACK_PAWN);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
                         case ROOK ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_ROOK : BLACK_ROOK);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
                         case KNIGHT ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KNIGHT : BLACK_KNIGHT);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
                         case BISHOP ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_BISHOP : BLACK_BISHOP);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
                         case QUEEN ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_QUEEN : BLACK_QUEEN);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
                         case KING ->
-                                System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KING : BLACK_KING);
+                                System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
                     }
                 } else {
                     System.out.print(" \u2001\u2005\u200A ");
@@ -155,12 +155,12 @@ public class GameplayHandler {
                 }
                 if (piece != null) {
                     switch (piece.getPieceType()) {
-                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_PAWN : BLACK_PAWN);
-                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_ROOK : BLACK_ROOK);
-                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KNIGHT : BLACK_KNIGHT);
-                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_BISHOP : BLACK_BISHOP);
-                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_QUEEN : BLACK_QUEEN);
-                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.BLACK ? WHITE_KING : BLACK_KING);
+                        case PAWN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN);
+                        case ROOK -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK);
+                        case KNIGHT -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT);
+                        case BISHOP -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP);
+                        case QUEEN -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN);
+                        case KING -> System.out.print(piece.pieceColor == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING);
                     }
                     System.out.print(RESET_BG_COLOR);
                 }
@@ -185,12 +185,12 @@ public class GameplayHandler {
         System.out.println(">>> " + game.getTeamTurn() + "'s turn");
     }
 
-    public void send(NotificationMessage notificationMessage) {
+    public void send(Notification notificationMessage) {
         System.out.println(notificationMessage.getMessage());
     }
 
-    public void error(ErrorMessage errorMessage) {
-        System.out.println(errorMessage.getMessage());
+    public void error(Error errorMessage) {
+        System.out.println(errorMessage.getErrorMessage());
     }
 
 
@@ -208,7 +208,7 @@ public class GameplayHandler {
             return;
         }
 
-        if(!game.isInStalemate(blackUser) || !game.isInStalemate(whiteUser)){
+        if(game.isInStalemate(blackUser) || game.isInStalemate(whiteUser)){
             endGame();
         }
     }

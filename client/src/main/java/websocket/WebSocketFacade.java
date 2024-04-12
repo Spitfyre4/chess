@@ -3,9 +3,9 @@ package websocket;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.*;
-import webSocketMessages.serverMessages.ErrorMessage;
-import webSocketMessages.serverMessages.LoadGameMessage;
-import webSocketMessages.serverMessages.NotificationMessage;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
 
@@ -37,9 +37,9 @@ public class WebSocketFacade extends Endpoint {
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType()) {
-                        case NOTIFICATION -> gameplay.send(new Gson().fromJson(message, NotificationMessage.class));
-                        case ERROR -> gameplay.error(new Gson().fromJson(message, ErrorMessage.class));
-                        case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadGameMessage.class));
+                        case NOTIFICATION -> gameplay.send(new Gson().fromJson(message, Notification.class));
+                        case ERROR -> gameplay.error(new Gson().fromJson(message, Error.class));
+                        case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadGame.class));
                     }
                 }
             });
@@ -48,7 +48,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void loadGame(LoadGameMessage loadGameMessage) {
+    private void loadGame(LoadGame loadGameMessage) {
         if (loadGameMessage.resign){
             gameplay.endGame();
             System.out.println("Press anything to continue");

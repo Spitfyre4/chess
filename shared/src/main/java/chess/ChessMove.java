@@ -63,4 +63,10 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
+
+    public String letterMove() {
+        String startPos = starPosition.toMove();
+        String endPos = endPosition.toMove();
+        return startPos + " -> " + endPos;
+    }
 }
