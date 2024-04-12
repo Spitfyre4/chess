@@ -51,6 +51,7 @@ public class WebSocketHandler {
             GameData game = games.getGame(new GameID(cmd.gameID));
 
             AuthData auth = gameService.authDatabase.getAuth(cmd.getAuthString());
+            System.out.print("");
             String username = auth.username();
             if (!Objects.equals(username, game.whiteUsername()) && !Objects.equals(username, game.blackUsername())) {
                 Error message =
@@ -114,12 +115,14 @@ public class WebSocketHandler {
 
             AuthData auth = gameService.authDatabase.getAuth(cmd.getAuthString());
             String username = auth.username();
+            System.out.print("");
             if (!Objects.equals(username, game.whiteUsername()) && !Objects.equals(username, game.blackUsername())) {
                 Error message =
                         new Error(ServerMessage.ServerMessageType.ERROR, "Error: unauthorized");
                 connections.sendMessage(cmd.getAuthString(), message);
                 return;
             }
+            System.out.print("");
 
             if(game.game().gameOver()){
                 Error message =
