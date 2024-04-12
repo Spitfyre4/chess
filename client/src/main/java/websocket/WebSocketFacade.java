@@ -85,6 +85,7 @@ public class WebSocketFacade extends Endpoint {
         try {
             var req = new LeaveCommand(authString, gameID, username);
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
+            System.out.print("");
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);
         }
@@ -102,6 +103,7 @@ public class WebSocketFacade extends Endpoint {
     public void joinObserver(String authString, int gameID, String username) throws ServerException {
         try {
             var req = new JoinObserverCommand(authString, gameID, username);
+            System.out.print("");
             this.session.getBasicRemote().sendText(new Gson().toJson(req));
         } catch (IOException ex) {
             throw new ServerException(ex.getMessage(), 500);

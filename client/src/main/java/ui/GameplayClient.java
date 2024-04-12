@@ -167,10 +167,6 @@ public class GameplayClient {
             Set<ChessMove> moveSet = new HashSet<>(moves);
             moves = new ArrayList<>(moveSet);
             for (ChessMove move : moves){
-//                if(badMove(move)){
-//                    moves.remove(move);
-//                    continue;
-//                }
                 System.out.print(index + ") " + move.getEndPosition().toMove());
                 if (move.getPromotionPiece() != null){
                     System.out.println(" promoting to a " + move.getPromotionPiece().toString());
@@ -194,15 +190,6 @@ public class GameplayClient {
         this.ws.makeMove(this.auth.authToken(), this.gameID, this.playerColor, moveFinal);
     }
 
-//    private boolean badMove(ChessMove move) throws InvalidMoveException {
-//        ChessGame gameTest = new ChessGame(gameplay.game);
-//        gameTest.makeMove(move);
-//        ChessGame.TeamColor color = ChessGame.TeamColor.WHITE;
-//        if(playerColor.equals("BLACK")){
-//            color = ChessGame.TeamColor.BLACK;
-//        }
-//        return gameTest.isInCheck(color) || gameTest.isInCheckmate(color);
-//    }
 
     private void highlight() throws ServerException {
         if(!gameplay.isGameRunning()){
@@ -272,7 +259,7 @@ public class GameplayClient {
                 """);
     }
 
-    public void ObserveEval(String input) {
+    public void observeEval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
@@ -296,7 +283,7 @@ public class GameplayClient {
         }
     }
 
-    public void ObserverHelp() throws ServerException {
+    public void observerHelp() throws ServerException {
         if(!gameplay.isGameRunning()){
             gameplay.confirmLeave();
             return;
