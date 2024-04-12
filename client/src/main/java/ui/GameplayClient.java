@@ -54,7 +54,7 @@ public class GameplayClient {
             this.help();
         } else {
             System.out.println("You joined as an observer");
-            this.ObserverHelp();
+            this.observerHelp();
             observer = true;
         }
 
@@ -63,7 +63,7 @@ public class GameplayClient {
             String line = scanner.nextLine();
             try {
                 if (observer) {
-                    this.ObserveEval(line);
+                    this.observeEval(line);
                 } else {
                     this.eval(line);
                 }
@@ -275,7 +275,7 @@ public class GameplayClient {
                 }
                 case "highlight" -> highlight();
                 case "redraw" -> redraw();
-                default -> ObserverHelp();
+                default -> observerHelp();
             }
 
         } catch (ServerException e) {
